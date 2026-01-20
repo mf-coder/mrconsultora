@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MR Consultora | Consultoría de Negocios</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-primario: #0F1C3F;
+            --color-secundario: #3B82F6;
+            --color-acento: #F59E0B;
+            --color-fondo: #F8FAFC;
+        }
+
+        body { font-family: 'Montserrat', sans-serif; background-color: var(--color-fondo); }
+        h1, h2, h3, .font-serif { font-family: 'Playfair Display', serif; }
+        
+        .bg-brand-primary { background-color: var(--color-primario); }
+        .text-brand-primary { color: var(--color-primario); }
+        .bg-brand-accent { background-color: var(--color-acento); }
+        .text-brand-accent { color: var(--color-acento); }
+        .bg-brand-secondary { background-color: var(--color-secundario); }
+
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px;
+            max-height: 400px;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(226, 232, 240, 1);
+        }
+
+        .step-node {
+            width: 100%;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            text-align: center;
+            border: 1px solid var(--color-secundario);
+            background: white;
+        }
+
+        .flow-line {
+            width: 1px;
+            height: 30px;
+            background: var(--color-acento);
+            margin: 0 auto;
+        }
+
+        @media (min-width: 768px) {
+            .flow-line { width: 30px; height: 1px; margin: 0 10px; }
+        }
+
+        .logo-placeholder {
+            font-weight: 800;
+            letter-spacing: 0.1em;
+            font-size: 1.5rem;
+        }
+
+        /* Estilo para listas sin emojis */
+        .custom-list { list-style: none; padding-left: 0; }
+        .custom-list li { position: relative; padding-left: 1.5rem; margin-bottom: 0.75rem; }
+        .custom-list li::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0.6rem;
+            width: 8px;
+            height: 1px;
+            background-color: var(--color-acento);
+        }
+    </style>
+</head>
+<body class="text-slate-900 overflow-x-hidden">
+
+    <!-- Navegación -->
+    <nav class="sticky top-0 z-50 bg-brand-primary text-white py-4 shadow-lg">
+        <div class="max-w-7xl mx-auto px-6 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="flex flex-col">
+                    <span class="logo-placeholder leading-none">MR</span>
+                    <span class="text-[9px] uppercase tracking-[0.3em] opacity-80">Consultora de Negocios</span>
+                </div>
+            </div>
+            <div class="flex gap-8 text-[10px] font-bold uppercase tracking-widest">
+                <a href="#inicio" class="hover:text-brand-accent transition-colors">Inicio</a>
+                <a href="#nosotros" class="hover:text-brand-accent transition-colors">Nosotros</a>
+                <a href="#planes" class="hover:text-brand-accent transition-colors">Planes</a>
+                <a href="#contacto" class="text-brand-accent">Consultar</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header id="inicio" class="bg-brand-primary text-white py-32 px-6 relative">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-16 items-center relative z-10">
+            <div>
+                <h1 class="text-5xl md:text-7xl font-bold leading-tight mb-8 italic">
+                    Sinergia Estratégica para el <span class="text-brand-accent">Crecimiento Sostenible</span>.
+                </h1>
+                <p class="text-xl text-slate-300 font-light mb-10 max-w-lg leading-relaxed">
+                    Unificamos la gestión legal corporativa con la analítica financiera avanzada para transformar la estructura de su empresa y maximizar sus márgenes de utilidad.
+                </p>
+                <div class="flex gap-6">
+                    <a href="#contacto" class="bg-brand-accent text-brand-primary px-10 py-4 rounded-sm font-bold hover:bg-white transition-all shadow-xl uppercase text-xs tracking-widest">Agendar Diagnóstico</a>
+                </div>
+            </div>
+            <div class="hidden md:block">
+                <div class="p-10 border border-white/20 rounded-sm backdrop-blur-sm">
+                    <h3 class="text-2xl font-bold mb-6 text-brand-accent">Visión Ejecutiva</h3>
+                    <p class="text-slate-400 leading-relaxed font-light mb-6">
+                        Entendemos que la rentabilidad no es un suceso aislado, sino el resultado de un blindaje operativo eficiente. Nuestra intervención garantiza que cada contrato y cada costo estén alineados con sus objetivos de expansión.
+                    </p>
+                    <div class="border-t border-white/10 pt-6">
+                        <span class="text-[10px] uppercase tracking-widest text-brand-secondary font-bold">Enfoque Basado en Datos</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Nosotros: Perfiles Profesionales -->
+    <section id="nosotros" class="py-28 px-6 max-w-7xl mx-auto">
+        <div class="mb-20">
+            <h2 class="text-4xl font-bold text-brand-primary mb-4 italic">Nuestro Equipo</h2>
+            <div class="w-20 h-1 bg-brand-accent"></div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-16">
+            <!-- Perfil Legal -->
+            <div class="space-y-6">
+                <h3 class="text-2xl font-bold text-brand-primary border-b border-slate-100 pb-4">Dirección Jurídica</h3>
+                <p class="text-slate-600 leading-relaxed">
+                    Liderada por nuestra Socia Especialista en Derecho Corporativo y actual candidata al MBA de la UNCUYO. Su perfil se centra en la abogacía preventiva, transformando el marco legal de la empresa en una barrera de defensa estratégica.
+                </p>
+                <p class="text-slate-600 leading-relaxed font-semibold">Áreas de Enfoque:</p>
+                <ul class="custom-list text-sm text-slate-500">
+                    <li>Blindaje laboral preventivo y regímenes disciplinarios.</li>
+                    <li>Ingeniería contractual para la optimización de cobranzas.</li>
+                    <li>Estructuración de sociedades y acuerdos de accionistas.</li>
+                    <li>Gobernanza y transparencia corporativa.</li>
+                </ul>
+            </div>
+
+            <!-- Perfil Contable -->
+            <div class="space-y-6">
+                <h3 class="text-2xl font-bold text-brand-primary border-b border-slate-100 pb-4">Dirección Financiera</h3>
+                <p class="text-slate-600 leading-relaxed">
+                    Coordinada por nuestro Socio Contador Público, especialista en Gestión de Costos y Rentabilidad. Su enfoque técnico permite a los dueños de negocio recuperar el control del flujo de fondos mediante el análisis riguroso de datos.
+                </p>
+                <p class="text-slate-600 leading-relaxed font-semibold">Áreas de Enfoque:</p>
+                <ul class="custom-list text-sm text-slate-500">
+                    <li>Optimización del Ciclo Operativo Neto (Dinero-Mercadería-Dinero).</li>
+                    <li>Determinación de costos reales y márgenes de contribución.</li>
+                    <li>Evaluación privada de proyectos de inversión (VAN y TIR).</li>
+                    <li>Planificación fiscal estratégica y control de gestión.</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Método -->
+    <section class="py-24 bg-slate-50 border-y border-slate-200 px-6">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold text-brand-primary mb-4 italic uppercase tracking-tighter">Metodología de Intervención</h2>
+                <p class="text-slate-600">Análisis del flujo de capital de trabajo.</p>
+            </div>
+
+            <div class="flex flex-col md:flex-row items-center justify-between gap-4 max-w-4xl mx-auto">
+                <div class="step-node shadow-md border-slate-200">
+                    <h4 class="font-bold text-brand-primary uppercase text-xs tracking-widest">Inversión</h4>
+                    <p class="text-[10px] text-slate-400 mt-2">CAPITAL APLICADO</p>
+                </div>
+                <div class="flow-line"></div>
+                <div class="step-node shadow-lg border-brand-accent scale-110 z-10">
+                    <h4 class="font-bold text-brand-primary uppercase text-xs tracking-widest">Operación</h4>
+                    <p class="text-[10px] text-slate-400 mt-2">VALOR AGREGADO</p>
+                </div>
+                <div class="flow-line"></div>
+                <div class="step-node shadow-md border-slate-200">
+                    <h4 class="font-bold text-brand-primary uppercase text-xs tracking-widest">Retorno</h4>
+                    <p class="text-[10px] text-slate-400 mt-2">LIQUIDEZ Y UTILIDAD</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Planes Estratégicos -->
+    <section id="planes" class="py-28 px-6 max-w-7xl mx-auto">
+        <div class="text-center mb-20">
+            <h2 class="text-4xl font-bold text-brand-primary mb-4 italic">Planes de Abono Mensual</h2>
+            <p class="text-slate-500 uppercase tracking-widest text-[10px]">Soluciones integradas para cada etapa del negocio</p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
+            <!-- Plan 1 -->
+            <div class="bg-white p-10 border border-slate-200 flex flex-col hover:border-brand-secondary transition-all">
+                <h3 class="text-xs font-bold text-slate-400 uppercase tracking-[0.2em] mb-6">Emprendedor</h3>
+                <p class="text-sm text-slate-500 mb-8 leading-relaxed">Asistencia fundamental para profesionales y comercios en etapa de organización.</p>
+                <ul class="custom-list text-xs text-slate-600 mb-10 flex-grow">
+                    <li>Gestión administrativa y fiscal básica.</li>
+                    <li>Asesoría legal preventiva recurrente.</li>
+                    <li>Análisis de viabilidad operativa inicial.</li>
+                </ul>
+                <div class="mb-6 border-t border-slate-50 pt-6">
+                    <span class="text-[10px] font-bold text-slate-400 uppercase">Honorarios</span>
+                    <p class="text-sm text-brand-primary font-bold">A consultar según escala</p>
+                </div>
+                <a href="#contacto" class="block text-center py-4 border border-brand-primary font-bold text-brand-primary hover:bg-brand-primary hover:text-white transition-all uppercase text-[10px] tracking-widest">Solicitar Propuesta</a>
+            </div>
+
+            <!-- Plan 2 -->
+            <div class="bg-brand-primary p-10 shadow-2xl flex flex-col transform lg:scale-105 relative">
+                <div class="absolute -top-4 left-10 bg-brand-accent text-brand-primary px-4 py-1 text-[9px] font-bold uppercase tracking-widest">Enfoque Corporativo</div>
+                <h3 class="text-xs font-bold text-brand-secondary uppercase tracking-[0.2em] mb-6">PyME Rentable</h3>
+                <p class="text-sm text-slate-400 mb-8 leading-relaxed">Profesionalización técnica de empresas con estructura de personal y stock.</p>
+                <ul class="custom-list text-xs text-white/80 mb-10 flex-grow">
+                    <li>Ingeniería de costos y precios de venta.</li>
+                    <li>Blindaje laboral y reglamentos de planta.</li>
+                    <li>Gestión activa de recupero de morosidad.</li>
+                    <li>Reporte trimestral de salud financiera.</li>
+                </ul>
+                <div class="mb-6 border-t border-white/10 pt-6">
+                    <span class="text-[10px] font-bold text-slate-400 uppercase">Honorarios</span>
+                    <p class="text-sm text-white font-bold">A consultar según volumen</p>
+                </div>
+                <a href="#contacto" class="block text-center py-4 bg-brand-secondary font-bold text-white hover:bg-white hover:text-brand-primary transition-all uppercase text-[10px] tracking-widest">Solicitar Propuesta</a>
+            </div>
+
+            <!-- Plan 3 -->
+            <div class="bg-white p-10 border border-slate-200 flex flex-col hover:border-brand-secondary transition-all">
+                <h3 class="text-xs font-bold text-slate-400 uppercase tracking-[0.2em] mb-6">Directorio Externo</h3>
+                <p class="text-sm text-slate-500 mb-8 leading-relaxed">Gerenciamiento legal y financiero integral para la alta dirección y toma de decisiones.</p>
+                <ul class="custom-list text-xs text-slate-600 mb-10 flex-grow">
+                    <li>Dirección Financiera Externa (CFO).</li>
+                    <li>Derecho Societario y acuerdos de inversión.</li>
+                    <li>Auditoría integral de riesgos y procesos.</li>
+                    <li>Representación técnica ante terceros.</li>
+                </ul>
+                <div class="mb-6 border-t border-slate-50 pt-6">
+                    <span class="text-[10px] font-bold text-slate-400 uppercase">Honorarios</span>
+                    <p class="text-sm text-brand-primary font-bold">A consultar bajo alcance</p>
+                </div>
+                <a href="#contacto" class="block text-center py-4 border border-brand-primary font-bold text-brand-primary hover:bg-brand-primary hover:text-white transition-all uppercase text-[10px] tracking-widest">Solicitar Propuesta</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Datos y Gráficos -->
+    <section class="py-24 bg-brand-primary text-white px-6 overflow-hidden">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            <div>
+                <h2 class="text-3xl font-bold mb-8 italic">Planificación Estratégica</h2>
+                <p class="text-slate-400 mb-10 leading-relaxed font-light">
+                    Nuestras proyecciones demuestran la solidez de una estructura eficiente. Aplicamos una política de indexación trimestral basada en datos oficiales, garantizando la previsibilidad financiera tanto para la consultora como para nuestros aliados estratégicos.
+                </p>
+                <div class="space-y-6">
+                    <div class="flex items-center gap-4">
+                        <div class="w-1 h-10 bg-brand-accent"></div>
+                        <div>
+                            <span class="block text-xs uppercase tracking-widest opacity-50 font-bold">Margen Operativo</span>
+                            <span class="text-2xl font-bold">Eficacia Proyectada 81%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="chart-container bg-white/5 p-8 rounded-sm">
+                <canvas id="growthChart"></canvas>
+            </div>
+        </div>
+    </section>
+
+    <!-- Formulario -->
+    <section id="contacto" class="py-32 bg-white px-6">
+        <div class="max-w-3xl mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold mb-4 italic text-brand-primary">Consulta Estratégica</h2>
+                <p class="text-slate-400 uppercase tracking-widest text-[10px]">Agende un diagnóstico técnico preliminar</p>
+            </div>
+            
+            <form class="space-y-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="border-b border-slate-200">
+                        <label class="text-[9px] font-bold uppercase text-slate-400 tracking-widest mb-2 block">Nombre y Apellido</label>
+                        <input type="text" class="w-full py-3 outline-none focus:border-brand-secondary transition-all" placeholder="Nombre completo">
+                    </div>
+                    <div class="border-b border-slate-200">
+                        <label class="text-[9px] font-bold uppercase text-slate-400 tracking-widest mb-2 block">Empresa</label>
+                        <input type="text" class="w-full py-3 outline-none focus:border-brand-secondary transition-all" placeholder="Razón Social">
+                    </div>
+                </div>
+                <div class="border-b border-slate-200">
+                    <label class="text-[9px] font-bold uppercase text-slate-400 tracking-widest mb-2 block">Plan de Interés</label>
+                    <select class="w-full py-3 outline-none bg-transparent">
+                        <option>Plan PyME Rentable</option>
+                        <option>Plan Emprendedor</option>
+                        <option>Plan Directorio Externo</option>
+                        <option>Proyecto Especial Puntual</option>
+                    </select>
+                </div>
+                <div class="border-b border-slate-200">
+                    <label class="text-[9px] font-bold uppercase text-slate-400 tracking-widest mb-2 block">Consulta técnica</label>
+                    <textarea rows="4" class="w-full py-3 outline-none focus:border-brand-secondary transition-all" placeholder="Describa brevemente su necesidad estratégica..."></textarea>
+                </div>
+                <button type="submit" class="w-full bg-brand-primary text-white py-5 font-bold uppercase tracking-widest text-xs hover:bg-brand-secondary transition-all">Enviar Requerimiento</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-16 bg-brand-primary text-center">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex flex-col items-center gap-4 mb-8">
+                <span class="logo-placeholder text-white">MR</span>
+                <span class="text-[10px] uppercase tracking-[0.5em] text-white/60">Consultora de Negocios</span>
+            </div>
+            <p class="text-[9px] text-white/30 uppercase tracking-[0.2em]">&copy; 2026 MR CONSULTORA | GESTIÓN ESTRATÉGICA EMPRESARIAL</p>
+        </div>
+    </footer>
+
+    <script>
+        Chart.defaults.font.family = 'Montserrat';
+        Chart.defaults.color = '#FFFFFF';
+
+        const ctxGrowth = document.getElementById('growthChart').getContext('2d');
+        new Chart(ctxGrowth, {
+            type: 'line',
+            data: {
+                labels: ['Q1', 'Q2', 'Q3', 'Q4'],
+                datasets: [{
+                    label: 'Utilidad Neta Proyectada',
+                    data: [1880, 2247, 4318, 4849],
+                    borderColor: '#3B82F6',
+                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                    fill: true,
+                    tension: 0.3,
+                    pointRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    y: { 
+                        beginAtZero: true,
+                        grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                        ticks: {
+                            callback: function(value) { return '$' + value + 'k'; }
+                        }
+                    },
+                    x: {
+                        grid: { display: false }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
