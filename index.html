@@ -6,6 +6,8 @@
     <title>MR Consultora | Consultoría de Negocios</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -16,7 +18,7 @@
         }
 
         body { font-family: 'Montserrat', sans-serif; background-color: var(--color-fondo); }
-        h1, h2, h3, .font-serif { font-family: 'Playfair Display', serif; }
+        h1, h2, h3, h4, .font-serif { font-family: 'Playfair Display', serif; }
         
         .bg-brand-primary { background-color: var(--color-primario); }
         .text-brand-primary { color: var(--color-primario); }
@@ -27,62 +29,98 @@
         .logo-placeholder {
             font-weight: 800;
             letter-spacing: 0.1em;
-            font-size: 1.5rem;
+            font-size: 1.25rem;
+        }
+        @media (min-width: 768px) {
+            .logo-placeholder { font-size: 1.5rem; }
         }
 
         .custom-list { list-style: none; padding-left: 0; }
         .custom-list li { position: relative; padding-left: 1.5rem; margin-bottom: 0.75rem; }
+        @media (min-width: 768px) {
+            .custom-list li { padding-left: 1.75rem; }
+        }
         .custom-list li::before {
             content: "";
             position: absolute;
             left: 0;
-            top: 0.6rem;
+            top: 0.65rem;
             width: 8px;
             height: 1px;
             background-color: var(--color-acento);
         }
 
         .slogan-banner {
-            letter-spacing: 0.2em;
+            letter-spacing: 0.1em;
             font-weight: 600;
             border-top: 1px solid rgba(255,255,255,0.2);
             padding-top: 1rem;
         }
-
-        .contact-label {
-            font-size: 0.65rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.15em;
-            color: var(--color-acento);
-            display: block;
-            margin-bottom: 0.25rem;
+        @media (min-width: 768px) {
+            .slogan-banner { letter-spacing: 0.2em; }
         }
 
-        .plan-badge {
-            font-size: 0.6rem;
+        .contact-label {
+            font-size: 0.7rem;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.1em;
-            padding: 0.25rem 0.75rem;
-            border-radius: 9999px;
-            margin-bottom: 1rem;
-            display: inline-block;
+            color: var(--color-acento);
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Estilo para las imágenes de perfil */
+        .profile-img {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid var(--color-acento);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        @media (min-width: 768px) {
+            .profile-img { width: 220px; height: 220px; }
+        }
+        .profile-img:hover {
+            transform: scale(1.05);
+        }
+
+        .header-logo {
+            height: 40px;
+            width: auto;
+            object-fit: contain;
+        }
+        @media (min-width: 768px) {
+            .header-logo { height: 50px; }
+        }
+
+        /* MENSAJE DE ÉXITO: OCULTO POR DEFECTO */
+        #form-status {
+            display: none;
+            animation: fadeIn 0.6s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
 <body class="text-slate-900 overflow-x-hidden">
 
     <!-- Navegación -->
-    <nav class="sticky top-0 z-50 bg-brand-primary text-white py-4 shadow-lg">
-        <div class="max-w-7xl mx-auto px-6 flex justify-between items-center">
+    <nav class="sticky top-0 z-50 bg-brand-primary text-white py-3 shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 flex justify-between items-center">
             <div class="flex items-center gap-3">
-                <div class="flex flex-col">
-                    <span class="logo-placeholder leading-none">MR</span>
-                    <span class="text-[9px] uppercase tracking-[0.3em] opacity-80">Consultora de Negocios</span>
+                <img src="logo.png" alt="Logo de MR Consultora" class="header-logo" onerror="this.style.display='none'">
+                <div class="flex flex-col border-l border-white/20 pl-3">
+                    <span class="font-bold text-xs md:text-sm tracking-widest uppercase">MR</span>
+                    <span class="text-[7px] md:text-[9px] uppercase tracking-[0.2em] opacity-80 leading-none">Consultora de Negocios</span>
                 </div>
             </div>
-            <div class="flex gap-8 text-[10px] font-bold uppercase tracking-widest">
+            <div class="flex gap-3 sm:gap-6 md:gap-8 text-[9px] md:text-[10px] font-bold uppercase tracking-tighter sm:tracking-widest">
                 <a href="#inicio" class="hover:text-brand-accent transition-colors">Inicio</a>
                 <a href="#nosotros" class="hover:text-brand-accent transition-colors">Nosotros</a>
                 <a href="#planes" class="hover:text-brand-accent transition-colors">Planes</a>
@@ -92,22 +130,22 @@
     </nav>
 
     <!-- Hero Section -->
-    <header id="inicio" class="bg-brand-primary text-white py-32 px-6 relative overflow-hidden">
-        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-16 items-center relative z-10">
+    <header id="inicio" class="bg-brand-primary text-white py-20 md:py-32 px-6 relative overflow-hidden">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16 items-center relative z-10">
             <div>
-                <h1 class="text-5xl md:text-7xl font-bold leading-tight mb-8 italic">
+                <h1 class="text-4xl md:text-7xl font-bold leading-tight mb-6 md:mb-8 italic">
                     Su empresa merece una <span class="text-brand-accent">gestión profesional</span> de alto nivel.
                 </h1>
-                <p class="text-xl text-slate-300 font-light mb-10 max-w-lg leading-relaxed">
+                <p class="text-lg md:text-xl text-slate-300 font-light mb-8 md:mb-10 max-w-lg leading-relaxed">
                     Usted conoce su negocio; nosotros sabemos cómo protegerlo y hacerlo más rentable. Brindamos un respaldo técnico integral para que tome decisiones con absoluta tranquilidad.
                 </p>
-                <div class="mb-10">
-                    <p class="slogan-banner text-[10px] uppercase text-brand-accent">
+                <div class="mb-8 md:mb-10">
+                    <p class="slogan-banner text-[8px] md:text-[10px] uppercase text-brand-accent">
                         contratá excelencia. confiá en profesionales.
                     </p>
                 </div>
-                <div class="flex gap-6">
-                    <a href="#consulta" class="bg-brand-accent text-brand-primary px-10 py-4 rounded-sm font-bold hover:bg-white transition-all shadow-xl uppercase text-xs tracking-widest">Agendar Diagnóstico</a>
+                <div class="flex flex-col sm:flex-row gap-4 md:gap-6">
+                    <a href="#consulta" class="bg-brand-accent text-brand-primary px-8 md:px-10 py-4 rounded-sm font-bold hover:bg-white transition-all shadow-xl uppercase text-[10px] md:text-xs tracking-widest text-center">Agendar Diagnóstico</a>
                 </div>
             </div>
             <div class="hidden md:block">
@@ -121,182 +159,273 @@
         </div>
     </header>
 
-    <!-- Nosotros: Perfiles Profesionales -->
-    <section id="nosotros" class="py-28 px-6 max-w-7xl mx-auto">
-        <div class="text-center mb-20">
-            <h2 class="text-4xl font-bold text-brand-primary mb-4 italic">Dirección Estratégica</h2>
-            <p class="text-slate-500 uppercase tracking-widest text-[10px]">Experiencia y formación académica al servicio de su PyME</p>
-            <div class="w-20 h-1 bg-brand-accent mx-auto mt-4"></div>
+    <!-- Nosotros: Perfiles Profesionales con Fotos -->
+    <section id="nosotros" class="py-16 md:py-28 px-6 max-w-7xl mx-auto">
+        <div class="text-center mb-16 md:mb-24">
+            <h2 class="text-3xl md:text-5xl font-bold text-brand-primary mb-4 italic">Dirección Estratégica</h2>
+            <p class="text-slate-500 uppercase tracking-widest text-xs md:text-sm">Experiencia y formación académica al servicio de su PyME</p>
+            <div class="w-16 md:w-24 h-1 bg-brand-accent mx-auto mt-4 md:mt-6"></div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-16">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20">
             <!-- Perfil Legal -->
-            <div class="p-8 border border-slate-100 bg-white shadow-sm hover:shadow-md transition-shadow">
-                <h3 class="text-2xl font-bold text-brand-primary mb-4">Área Legal Corporativa</h3>
-                <p class="text-slate-600 leading-relaxed mb-6 italic font-medium">
-                    Especialista en Derecho de Empresa y maestranda en el MBA de UNCUYO.
+            <div class="flex flex-col items-center md:items-start text-center md:text-left p-6 md:p-10 border border-slate-100 bg-white shadow-sm hover:shadow-md transition-shadow rounded-sm">
+                <img src="fotoabogada.png" alt="Socia Área Legal" class="profile-img mb-8">
+                <h3 class="text-2xl md:text-3xl font-bold text-brand-primary mb-4">Área Legal Corporativa</h3>
+                <p class="text-lg md:text-xl text-slate-700 leading-relaxed mb-6 italic font-medium">
+                    Abogada especialista en Derecho de Empresa y candidata a MBA por la UNCUYO.
                 </p>
-                <p class="text-slate-500 text-sm leading-relaxed mb-6">
-                    Su enfoque se aleja de la abogacía tradicional reactiva para centrarse en la Ingeniería Legal Preventiva. Utiliza herramientas de gestión estratégica adquiridas en su formación de postgrado para blindar el patrimonio de la empresa, gestionar el capital humano y asegurar que cada acuerdo contractual sea una herramienta de crecimiento.
+                <p class="text-base md:text-lg text-slate-600 leading-relaxed mb-8">
+                    Se enfoca en la Ingeniería Legal Preventiva para blindar el patrimonio de la empresa y asegurar que cada acuerdo contractual sea una herramienta de crecimiento. Su visión de negocios permite transformar el marco legal en una ventaja competitiva para la gestión del capital humano y la protección de activos.
                 </p>
-                <ul class="custom-list text-xs text-slate-500 font-bold uppercase tracking-wider">
+                <ul class="custom-list text-xs md:text-sm text-slate-500 font-bold uppercase tracking-wider space-y-2 text-left">
                     <li>Blindaje Laboral y Reglamentos</li>
                     <li>Gobernanza Societaria</li>
-                    <li>Protección de Activos e Intangibles</li>
+                    <li>Ingeniería Contractual</li>
                 </ul>
             </div>
 
             <!-- Perfil Contable -->
-            <div class="p-8 border border-slate-100 bg-white shadow-sm hover:shadow-md transition-shadow">
-                <h3 class="text-2xl font-bold text-brand-primary mb-4">Área Contable y de Costos</h3>
-                <p class="text-slate-600 leading-relaxed mb-6 italic font-medium">
+            <div class="flex flex-col items-center md:items-start text-center md:text-left p-6 md:p-10 border border-slate-100 bg-white shadow-sm hover:shadow-md transition-shadow rounded-sm">
+                <img src="fotocontable.jpg" alt="Socio Área Contable" class="profile-img mb-8">
+                <h3 class="text-2xl md:text-3xl font-bold text-brand-primary mb-4">Área Contable y de Costos</h3>
+                <p class="text-lg md:text-xl text-slate-700 leading-relaxed mb-6 italic font-medium">
                     Contador Público con Especialización en Gestión de Costos y Rentabilidad.
                 </p>
-                <p class="text-slate-500 text-sm leading-relaxed mb-6">
-                    Especialista en desglosar la realidad financiera detrás de la facturación. Su metodología técnica permite a los dueños de negocios comprender exactamente dónde se genera el beneficio. Experto en la optimización del Ciclo Dinero-Mercadería-Dinero, aporta la rigurosidad analítica necesaria para establecer políticas de precios rentables.
+                <p class="text-base md:text-lg text-slate-600 leading-relaxed mb-8">
+                    Experto en el análisis técnico de rentabilidad y optimización del flujo de fondos. Su metodología permite a los dueños de negocios detectar fugas de liquidez y comprender el rendimiento real de su Ciclo Dinero-Mercadería-Dinero. Aporta la rigurosidad necesaria para establecer políticas de precios eficientes y planificación fiscal sólida.
                 </p>
-                <ul class="custom-list text-xs text-slate-500 font-bold uppercase tracking-wider">
+                <ul class="custom-list text-xs md:text-sm text-slate-500 font-bold uppercase tracking-wider space-y-2 text-left">
                     <li>Ingeniería de Costos y Precios</li>
-                    <li>Evaluación Privada de Proyectos (ROI)</li>
-                    <li>Control de Gestión y Auditoría</li>
+                    <li>Evaluación de Proyectos (ROI)</li>
+                    <li>Control de Gestión Financiera</li>
                 </ul>
             </div>
         </div>
     </section>
 
-    <!-- Planes Estratégicos -->
-    <section id="planes" class="py-28 px-6 bg-slate-50 border-y border-slate-200">
-        <div class="max-w-7xl mx-auto">
-            <div class="text-center mb-20">
-                <h2 class="text-4xl font-bold text-brand-primary mb-4 italic">Nuestros Planes de Abono</h2>
-                <p class="text-slate-500 uppercase tracking-widest text-[10px]">Soluciones escalables diseñadas para PyMEs con visión de futuro</p>
-            </div>
+    <!-- Planes Estratégicos con Letra Grande, Clara y Responsive -->
+    <section id="planes" class="py-16 md:py-28 px-6 bg-slate-50 border-y border-slate-200">
+        <div class="max-w-7xl mx-auto text-center">
+            <h2 class="text-3xl md:text-5xl font-bold text-brand-primary mb-4 italic">Nuestros Planes de Abono</h2>
+            <p class="text-slate-500 uppercase tracking-widest text-xs md:text-sm mb-12 md:mb-20">Soluciones escalables diseñadas para PyMEs con visión de futuro</p>
 
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 md:gap-10">
                 <!-- Plan 1 -->
-                <div class="bg-white p-10 border border-slate-200 flex flex-col hover:border-brand-secondary transition-all">
-                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-[0.2em] mb-6">Plan Emprendedor</h3>
-                    <p class="text-sm text-slate-500 mb-8 leading-relaxed">Cimientos profesionales para negocios en etapa de organización que buscan orden administrativo y soporte técnico recurrente.</p>
-                    <ul class="custom-list text-xs text-slate-600 mb-10 flex-grow">
+                <div class="bg-white p-8 md:p-12 border border-slate-200 flex flex-col hover:border-brand-secondary transition-all rounded-sm shadow-sm text-left">
+                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-[0.2em] mb-4">Plan Emprendedor</h3>
+                    <h4 class="text-xl md:text-2xl font-bold text-brand-primary mb-6">Emprendedor Organizado</h4>
+                    <p class="text-sm md:text-base text-slate-600 mb-8 leading-relaxed">Cimientos profesionales para negocios en etapa de organización que buscan orden administrativo y soporte técnico recurrente.</p>
+                    <ul class="custom-list text-xs md:text-sm text-slate-600 mb-10 md:mb-12 flex-grow space-y-2">
                         <li>Gestión administrativa y cumplimiento fiscal.</li>
                         <li>Asesoría técnica permanente para consultas de gestión.</li>
                         <li>Revisión de contratos y acuerdos operativos.</li>
                     </ul>
-                    <a href="#consulta" class="block text-center py-4 border border-brand-primary font-bold text-brand-primary hover:bg-brand-primary hover:text-white transition-all uppercase text-[10px] tracking-widest">Solicitar cotización personalizada</a>
+                    <a href="#consulta" class="block text-center py-4 md:py-5 border-2 border-brand-primary font-bold text-brand-primary hover:bg-brand-primary hover:text-white transition-all uppercase text-[10px] md:text-[11px] tracking-widest">Solicitar cotización personalizada</a>
                 </div>
 
                 <!-- Plan 2 -->
-                <div class="bg-brand-primary p-10 shadow-2xl flex flex-col transform lg:scale-105 relative">
-                    <div class="absolute -top-4 left-10 bg-brand-accent text-brand-primary px-4 py-1 text-[9px] font-bold uppercase tracking-widest">Recomendado</div>
-                    <h3 class="text-xs font-bold text-brand-accent uppercase tracking-[0.2em] mb-6">Plan PyME Rentable</h3>
-                    <p class="text-sm text-slate-400 mb-6 leading-relaxed">Acompañamiento integral para empresas con nómina de empleados, stock de mercadería y estructura de costos compleja. Este plan incluye de forma íntegra la totalidad de los servicios y condiciones detallados en el Plan 1.</p>
-                    <p class="text-[10px] text-brand-accent font-bold uppercase mb-4 tracking-wider italic">Optimización de rentabilidad, eficiencia de Capital de Trabajo y blindaje laboral.</p>
-                    <ul class="custom-list text-xs text-white/80 mb-10 flex-grow">
+                <div class="bg-brand-primary p-8 md:p-12 shadow-2xl flex flex-col transform lg:scale-105 relative border-2 border-brand-accent rounded-sm text-left text-white">
+                    <div class="absolute -top-4 left-6 md:left-10 bg-brand-accent text-brand-primary px-4 md:px-5 py-1 text-[9px] md:text-[10px] font-bold uppercase tracking-widest shadow-md">Recomendado</div>
+                    <h3 class="text-xs font-bold text-brand-accent uppercase tracking-[0.2em] mb-4 opacity-90">Estrategia Avanzada</h3>
+                    <h4 class="text-xl md:text-2xl font-bold text-brand-accent mb-6">Plan PyME Rentable</h4>
+                    <p class="text-sm md:text-base text-slate-300 mb-6 leading-relaxed">Acompañamiento integral para empresas con nómina de empleados, stock de mercadería y estructura de costos compleja. Incluye de forma íntegra los servicios del Plan 1.</p>
+                    <p class="text-[10px] text-brand-accent font-bold uppercase mb-6 md:mb-8 tracking-wider italic">Optimización de rentabilidad, eficiencia de Capital de Trabajo y blindaje laboral.</p>
+                    <ul class="custom-list text-xs md:text-sm text-white/90 mb-10 md:mb-12 flex-grow space-y-2">
                         <li>Análisis de costos y márgenes de rentabilidad.</li>
                         <li>Eficiencia operativa del Capital de Trabajo.</li>
                         <li>Diseño de reglamentos y blindaje laboral.</li>
                         <li>Gestión técnica de cobranzas y morosidad.</li>
                     </ul>
-                    <a href="#consulta" class="block text-center py-4 bg-brand-secondary font-bold text-white hover:bg-white hover:text-brand-primary transition-all uppercase text-[10px] tracking-widest shadow-lg">Solicitar cotización personalizada</a>
+                    <a href="#consulta" class="block text-center py-4 md:py-5 bg-brand-secondary font-bold text-white hover:bg-white hover:text-brand-primary transition-all uppercase text-[10px] md:text-[11px] tracking-widest shadow-lg">Solicitar cotización personalizada</a>
                 </div>
 
                 <!-- Plan 3 -->
-                <div class="bg-white p-10 border border-slate-200 flex flex-col hover:border-brand-secondary transition-all">
-                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-[0.2em] mb-6">Plan Consultoría Integral</h3>
-                    <p class="text-sm text-slate-500 mb-6 leading-relaxed">Nivel máximo de soporte estratégico para sociedades (SA, SRL, etc.), empresas familiares en transición generacional o planes de expansión. Incluye la totalidad de los servicios previstos en el Plan 1 y Plan 2, ejecutados según la necesidad específica de su organización.</p>
-                    <ul class="custom-list text-xs text-slate-600 mb-10 flex-grow">
-                        <li>Dirección estratégica financiera y flujo de fondos proyectado.</li>
+                <div class="bg-white p-8 md:p-12 border border-slate-200 flex flex-col hover:border-brand-secondary transition-all rounded-sm shadow-sm text-left">
+                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-[0.2em] mb-4">Estrategia Global</h3>
+                    <h4 class="text-xl md:text-2xl font-bold text-brand-primary mb-6">Plan Consultoría Integral</h4>
+                    <p class="text-sm md:text-base text-slate-600 mb-6 leading-relaxed">Nivel máximo de soporte estratégico para sociedades, empresas familiares en transición generacional o expansión. Incluye servicios del Plan 1 y 2.</p>
+                    <ul class="custom-list text-xs md:text-sm text-slate-600 mb-10 md:mb-12 flex-grow space-y-2">
+                        <li>Dirección estratégica financiera y flujos proyectados.</li>
                         <li>Derecho societario avanzado y protocolos familiares.</li>
-                        <li>Auditoría técnica de procesos y prevención de ineficiencias.</li>
+                        <li>Auditoría técnica de procesos e ineficiencias.</li>
                         <li>Evaluación técnica de proyectos de inversión.</li>
                     </ul>
-                    <a href="#consulta" class="block text-center py-4 border border-brand-primary font-bold text-brand-primary hover:bg-brand-primary hover:text-white transition-all uppercase text-[10px] tracking-widest">Solicitar cotización personalizada</a>
+                    <a href="#consulta" class="block text-center py-4 md:py-5 border-2 border-brand-primary font-bold text-brand-primary hover:bg-brand-primary hover:text-white transition-all uppercase text-[10px] md:text-[11px] tracking-widest">Solicitar cotización personalizada</a>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- SECCIÓN DE CONTACTO -->
-    <section id="contacto" class="py-24 bg-white px-6">
+    <!-- Canales de Comunicación -->
+    <section id="contacto" class="py-16 md:py-24 bg-white px-6">
         <div class="max-w-7xl mx-auto">
-            <div class="mb-16">
-                <h2 class="text-3xl font-bold text-brand-primary mb-4 italic">Canales de Comunicación</h2>
-                <p class="text-slate-500 uppercase tracking-widest text-[10px]">Información de contacto directo</p>
-                <div class="w-12 h-0.5 bg-brand-accent mt-4"></div>
+            <div class="mb-12 md:mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold text-brand-primary mb-4 italic">Canales de Comunicación</h2>
+                <p class="text-slate-500 uppercase tracking-widest text-xs md:text-sm">Información de contacto directo para clientes y aliados</p>
+                <div class="w-12 md:w-16 h-0.5 bg-brand-accent mt-4"></div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12 text-center md:text-left">
                 <div class="p-8 border border-slate-100 rounded-sm">
                     <span class="contact-label">Dirección Física</span>
-                    <p class="text-brand-primary font-semibold text-lg">Santa Fe N° 15</p>
-                    <p class="text-slate-500 text-sm">San Rafael, Mendoza</p>
+                    <p class="text-brand-primary font-semibold text-lg md:text-xl">Santa Fe N° 15</p>
+                    <p class="text-slate-500 text-sm md:text-base">San Rafael, Mendoza</p>
                 </div>
                 <div class="p-8 border border-slate-100 rounded-sm">
                     <span class="contact-label">Línea Directa</span>
-                    <p class="text-brand-primary font-semibold text-lg">2604-849021</p>
-                    <p class="text-slate-500 text-sm">Lunes a Viernes de 8:00 a 13:00hs</p>
+                    <p class="text-brand-primary font-semibold text-lg md:text-xl">2604849021</p>
+                    <p class="text-slate-500 text-sm md:text-base">Atención Lunes a Viernes</p>
                 </div>
                 <div class="p-8 border border-slate-100 rounded-sm">
                     <span class="contact-label">Correo Electrónico</span>
-                    <p class="text-brand-primary font-semibold text-lg">mrgestores@hotmail.com</p>
-                    <p class="text-slate-500 text-sm">Consultas generales y técnica</p>
+                    <p class="text-brand-primary font-semibold text-base md:text-xl truncate">mrgestores@hotmail.com</p>
+                    <p class="text-slate-500 text-sm md:text-base">Consultas generales y técnica</p>
+                </div>
+                <div class="p-8 border border-slate-100 rounded-sm">
+                    <span class="contact-label">Presencia Digital</span>
+                    <div class="flex justify-center md:justify-start gap-6 mt-4">
+                        <a href="https://www.linkedin.com/company/mr-gestor%C3%ADa/?viewAsMember=true" target="_blank" class="text-brand-primary hover:text-brand-secondary transition-colors" title="LinkedIn">
+                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+                        </a>
+                        <a href="https://www.instagram.com/mr_consultora_empresarial/" target="_blank" class="text-brand-primary hover:text-brand-secondary transition-colors" title="Instagram">
+                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+                        </a>
+                        <a href="https://www.facebook.com/mrgestores/" target="_blank" class="text-brand-primary hover:text-brand-secondary transition-colors" title="Facebook">
+                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c5.05-.5 9-4.76 9-9.95z"/></svg>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- SECCIÓN DE CONSULTA: FORMULARIO -->
-    <section id="consulta" class="py-24 bg-slate-50 border-t border-slate-200 px-6">
+    <!-- Consulta Estratégica: Formulario -->
+    <section id="consulta" class="py-16 md:py-24 bg-slate-50 border-t border-slate-200 px-6">
         <div class="max-w-3xl mx-auto">
-            <div class="text-center mb-16">
-                <h2 class="text-4xl font-bold italic text-brand-primary uppercase tracking-tighter">Consulta Estratégica</h2>
-                <p class="text-slate-400 uppercase tracking-widest text-[10px] mt-2">Inicie un proceso de profesionalización con nosotros</p>
+            <div class="text-center mb-12 md:mb-16">
+                <h2 class="text-3xl md:text-5xl font-bold italic text-brand-primary uppercase tracking-tighter">Consulta Estratégica</h2>
+                <p class="text-slate-400 uppercase tracking-widest text-xs md:text-sm mt-4">Inicie un proceso de profesionalización con nosotros</p>
             </div>
             
-            <form class="space-y-10 bg-white p-12 shadow-sm border border-slate-100">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
-                    <div class="border-b border-slate-200">
-                        <label class="text-[9px] font-bold uppercase text-slate-400 tracking-widest mb-2 block">Nombre y Apellido</label>
-                        <input type="text" class="w-full py-3 outline-none focus:border-brand-secondary transition-all" placeholder="Referente de la empresa">
+            <div class="bg-white p-6 md:p-16 shadow-sm border border-slate-100 rounded-sm overflow-hidden min-h-[400px]">
+                <!-- FORMULARIO: VISIBLE POR DEFECTO -->
+                <form id="contact-form" action="https://formspree.io/f/mqakpeoz" method="POST" class="space-y-8 md:space-y-12">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
+                        <div class="border-b border-slate-200">
+                            <label class="text-[9px] md:text-[10px] font-bold uppercase text-slate-400 tracking-widest mb-3 block">Nombre y Apellido</label>
+                            <input type="text" name="nombre" required class="w-full py-3 md:py-4 outline-none focus:border-brand-secondary transition-all text-sm md:text-base" placeholder="Referente de la empresa">
+                        </div>
+                        <div class="border-b border-slate-200">
+                            <label class="text-[9px] md:text-[10px] font-bold uppercase text-slate-400 tracking-widest mb-3 block">Razón Social</label>
+                            <input type="text" name="empresa" required class="w-full py-3 md:py-4 outline-none focus:border-brand-secondary transition-all text-sm md:text-base" placeholder="Nombre de la PyME">
+                        </div>
                     </div>
                     <div class="border-b border-slate-200">
-                        <label class="text-[9px] font-bold uppercase text-slate-400 tracking-widest mb-2 block">Razón Social</label>
-                        <input type="text" class="w-full py-3 outline-none focus:border-brand-secondary transition-all" placeholder="Nombre de la PyME">
+                        <label class="text-[9px] md:text-[10px] font-bold uppercase text-slate-400 tracking-widest mb-3 block">Área de Interés</label>
+                        <select name="interes" class="w-full py-3 md:py-4 outline-none bg-transparent text-sm md:text-base">
+                            <option value="pyme-rentable">Suscripción PyME Rentable</option>
+                            <option value="emprendedor">Plan Emprendedor Organizado</option>
+                            <option value="integral">Plan Consultoría Integral</option>
+                            <option value="otros">Otros Servicios de Negocios</option>
+                        </select>
                     </div>
+                    <div class="border-b border-slate-200">
+                        <label class="text-[9px] md:text-[10px] font-bold uppercase text-slate-400 tracking-widest mb-3 block">Breve descripción del requerimiento</label>
+                        <textarea name="mensaje" rows="4" required class="w-full py-3 md:py-4 outline-none focus:border-brand-secondary transition-all text-sm md:text-base" placeholder="¿En qué área necesita soporte técnico?"></textarea>
+                    </div>
+                    
+                    <button type="submit" id="submit-btn" class="w-full bg-brand-primary text-white py-5 md:py-6 font-bold uppercase tracking-widest text-[10px] md:text-sm hover:bg-brand-secondary transition-all shadow-md">Enviar Requerimiento Estratégico</button>
+                </form>
+
+                <!-- RESPUESTA AL FORMULARIO: OCULTA HASTA EL ENVÍO -->
+                <div id="form-status" class="text-center py-10 md:py-16">
+                    <div class="w-16 md:w-20 h-16 md:h-20 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-6 md:mb-8 text-2xl md:text-3xl font-bold">✓</div>
+                    <h3 class="text-2xl md:text-3xl font-bold text-brand-primary mb-4 italic">¡Consulta Enviada!</h3>
+                    <p class="text-slate-500 text-base md:text-lg max-w-md mx-auto">Hemos recibido su requerimiento profesional correctamente. Un socio de la firma se pondrá en contacto con usted a la brevedad para coordinar el diagnóstico inicial.</p>
+                    <button onclick="resetForm()" class="mt-8 md:mt-10 text-brand-secondary font-bold text-xs md:text-sm uppercase tracking-widest hover:underline">Enviar otra consulta</button>
                 </div>
-                <div class="border-b border-slate-200">
-                    <label class="text-[9px] font-bold uppercase text-slate-400 tracking-widest mb-2 block">Área de Interés</label>
-                    <select class="w-full py-3 outline-none bg-transparent">
-                        <option>Suscripción PyME Rentable</option>
-                        <option>Plan Emprendedor Organizado</option>
-                        <option>Plan Consultoría Integral</option>
-                        <option>Otros Servicios de Negocios</option>
-                    </select>
-                </div>
-                <div class="border-b border-slate-200">
-                    <label class="text-[9px] font-bold uppercase text-slate-400 tracking-widest mb-2 block">Breve descripción del requerimiento</label>
-                    <textarea rows="4" class="w-full py-3 outline-none focus:border-brand-secondary transition-all" placeholder="¿En qué área necesita soporte técnico?"></textarea>
-                </div>
-                <button type="submit" class="w-full bg-brand-primary text-white py-5 font-bold uppercase tracking-widest text-xs hover:bg-brand-secondary transition-all">Enviar Requerimiento Estratégico</button>
-            </form>
+            </div>
         </div>
     </section>
 
     <!-- Footer -->
-    <footer class="py-20 bg-brand-primary text-center">
-        <div class="max-w-7xl mx-auto px-6">
-            <div class="flex flex-col items-center gap-6 mb-12">
-                <span class="logo-placeholder text-white">MR</span>
-                <span class="text-[10px] uppercase tracking-[0.5em] text-white/60">Consultora de Negocios</span>
-                <p class="text-[9px] uppercase tracking-[0.2em] text-brand-accent max-w-xs mx-auto">contratá excelencia. confiá en profesionales.</p>
+    <footer class="py-16 md:py-24 bg-brand-primary text-center">
+        <div class="max-w-7xl mx-auto px-6 text-white/60">
+            <div class="flex flex-col items-center gap-6 md:gap-8 mb-12 md:mb-16">
+                <img src="logo.png" alt="Logo de MR Consultora en Blanco" class="header-logo brightness-0 invert opacity-80" onerror="this.style.display='none'">
+                <div class="flex flex-col items-center">
+                    <span class="font-bold text-white text-xl tracking-[0.3em] uppercase">MR</span>
+                    <span class="text-[8px] md:text-xs uppercase tracking-[0.4em] md:tracking-[0.5em] text-white/60">Consultora de Negocios</span>
+                </div>
+                <p class="text-[8px] md:text-xs uppercase tracking-[0.1em] md:tracking-[0.2em] text-brand-accent max-w-sm mx-auto px-4 italic">contratá excelencia. confiá en profesionales.</p>
+                
+                <div class="flex gap-6">
+                    <a href="https://www.linkedin.com/company/mr-gestor%C3%ADa/?viewAsMember=true" target="_blank" class="hover:text-brand-accent transition-colors">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+                    </a>
+                    <a href="https://www.instagram.com/mr_consultora_empresarial/" target="_blank" class="hover:text-brand-accent transition-colors">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+                    </a>
+                    <a href="https://www.facebook.com/mrgestores/" target="_blank" class="hover:text-brand-accent transition-colors">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c5.05-.5 9-4.76 9-9.95z"/></svg>
+                    </a>
+                </div>
             </div>
-            <div class="text-[10px] text-white/40 space-y-2 mb-8 uppercase tracking-widest">
+            <div class="text-[9px] md:text-xs text-white/40 space-y-2 md:space-y-3 mb-8 md:mb-10 uppercase tracking-widest px-4">
                 <p>Santa Fe N° 15, San Rafael, Mendoza</p>
                 <p>Tel: 2604849021 | mrgestores@hotmail.com</p>
             </div>
-            <p class="text-[9px] text-white/30 uppercase tracking-[0.2em] pt-10 border-t border-white/5">&copy; 2026 MR CONSULTORA | GESTIÓN ESTRATÉGICA PyME</p>
+            <p class="text-[8px] md:text-[10px] text-white/20 uppercase tracking-[0.2em] pt-8 md:pt-12 border-t border-white/5 px-4">&copy; 2026 MR CONSULTORA | GESTIÓN ESTRATÉGICA PyME</p>
         </div>
     </footer>
 
+    <script>
+        const form = document.getElementById('contact-form');
+        const statusDiv = document.getElementById('form-status');
+        const submitBtn = document.getElementById('submit-btn');
+
+        form.onsubmit = async (e) => {
+            e.preventDefault();
+            
+            // Desactivar botón para evitar múltiples envíos
+            submitBtn.disabled = true;
+            submitBtn.innerText = "ENVIANDO REQUERIMIENTO...";
+            
+            const formData = new FormData(form);
+            
+            try {
+                const response = await fetch(form.action, {
+                    method: form.method,
+                    body: formData,
+                    headers: { 'Accept': 'application/json' }
+                });
+
+                if (response.ok) {
+                    // Ocultar formulario y MOSTRAR RESPUESTA (statusDiv)
+                    form.style.display = 'none';
+                    statusDiv.style.display = 'block';
+                    form.reset();
+                    
+                    // Hacer scroll automático al mensaje de éxito si es necesario
+                    statusDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                } else {
+                    const data = await response.json();
+                    alert("Error: " + (data.errors ? data.errors[0].message : "No se pudo enviar el mensaje."));
+                }
+            } catch (error) {
+                alert("Hubo un error de conexión. Por favor, verifique su internet o intente más tarde.");
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerText = "Enviar Requerimiento Estratégico";
+            }
+        };
+
+        function resetForm() {
+            // Volver al estado inicial
+            statusDiv.style.display = 'none';
+            form.style.display = 'block';
+        }
+    </script>
 </body>
 </html>
