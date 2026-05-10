@@ -1,455 +1,638 @@
 <!DOCTYPE html>
 <html lang="es" class="scroll-smooth">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MR Consultora | Consultoría de Negocios</title>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --color-primario: #0F1C3F;
-            --color-secundario: #3B82F6;
-            --color-acento: #F59E0B;
-            --color-fondo: #F8FAFC;
-        }
-
-        body { font-family: 'Montserrat', sans-serif; background-color: var(--color-fondo); }
-        h1, h2, h3, h4, .font-serif { font-family: 'Playfair Display', serif; }
-        
-        .bg-brand-primary { background-color: var(--color-primario); }
-        .text-brand-primary { color: var(--color-primario); }
-        .bg-brand-accent { background-color: var(--color-acento); }
-        .text-brand-accent { color: var(--color-acento); }
-        .bg-brand-secondary { background-color: var(--color-secundario); }
-
-        .custom-list { list-style: none; padding-left: 0; }
-        .custom-list li { position: relative; padding-left: 1.5rem; margin-bottom: 0.75rem; }
-        @media (min-width: 768px) {
-            .custom-list li { padding-left: 1.75rem; }
-        }
-        .custom-list li::before {
-            content: "";
-            position: absolute;
-            left: 0;
-            top: 0.65rem;
-            width: 8px;
-            height: 1px;
-            background-color: var(--color-acento);
-        }
-
-        .slogan-banner {
-            letter-spacing: 0.1em;
-            font-weight: 600;
-            border-top: 1px solid rgba(255,255,255,0.2);
-            padding-top: 1rem;
-        }
-        @media (min-width: 768px) {
-            .slogan-banner { letter-spacing: 0.2em; }
-        }
-
-        .contact-label {
-            font-size: 0.75rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            color: var(--color-acento);
-            display: block;
-            margin-bottom: 0.5rem;
-        }
-
-        /* Imágenes de perfil circulares */
-        .profile-img {
-            width: 180px;
-            height: 180px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 4px solid var(--color-acento);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease;
-        }
-        @media (min-width: 768px) {
-            .profile-img { width: 220px; height: 220px; }
-        }
-        .profile-img:hover {
-            transform: scale(1.05);
-        }
-
-        /* Logo de encabezado proporcional */
-        .header-logo {
-            height: 55px;
-            width: auto;
-            object-fit: contain;
-            transition: height 0.3s ease;
-        }
-        @media (min-width: 768px) {
-            .header-logo { height: 80px; }
-        }
-
-        #form-status {
-            display: none;
-            animation: fadeIn 0.6s ease-out forwards;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MR Consultora | Gestión de Rentabilidad y Blindaje Legal para PyMEs — San Rafael, Mendoza</title>
+<meta name="description" content="MR Consultora profesionaliza la toma de decisiones en PyMEs de San Rafael mediante Cuadro de Mando Integral, Power BI y blindaje laboral preventivo. Diagnóstico Técnico de Estructura disponible.">
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com"></script>
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --color-primario: #0F1C3F;
+  --color-secundario: #3B82F6;
+  --color-acento: #F59E0B;
+  --color-fondo: #F8FAFC;
+}
+body { font-family: 'Montserrat', sans-serif; background-color: var(--color-fondo); }
+h1, h2, h3, h4, .font-serif { font-family: 'Playfair Display', serif; }
+.bg-brand-primary { background-color: var(--color-primario); }
+.text-brand-primary { color: var(--color-primario); }
+.bg-brand-accent { background-color: var(--color-acento); }
+.text-brand-accent { color: var(--color-acento); }
+.bg-brand-secondary { background-color: var(--color-secundario); }
+.custom-list { list-style: none; padding-left: 0; }
+.custom-list li { position: relative; padding-left: 1.5rem; margin-bottom: 0.75rem; }
+@media (min-width: 768px) { .custom-list li { padding-left: 1.75rem; } }
+.custom-list li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.65rem;
+  width: 8px;
+  height: 1px;
+  background-color: var(--color-acento);
+}
+.slogan-banner {
+  letter-spacing: 0.1em;
+  font-weight: 600;
+  border-top: 1px solid rgba(255,255,255,0.2);
+  padding-top: 1rem;
+}
+@media (min-width: 768px) { .slogan-banner { letter-spacing: 0.2em; } }
+.contact-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--color-acento);
+  display: block;
+  margin-bottom: 0.5rem;
+}
+.profile-img {
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid var(--color-acento);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease;
+}
+@media (min-width: 768px) { .profile-img { width: 220px; height: 220px; } }
+.profile-img:hover { transform: scale(1.05); }
+.header-logo {
+  height: 55px;
+  width: auto;
+  object-fit: contain;
+  transition: height 0.3s ease;
+}
+@media (min-width: 768px) { .header-logo { height: 80px; } }
+#form-status {
+  display: none;
+  animation: fadeIn 0.6s ease-out forwards;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+/* WhatsApp float */
+.wa-float {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 9999;
+  background: #25D366;
+  color: white;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+  text-decoration: none;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.wa-float:hover { transform: scale(1.1); box-shadow: 0 6px 20px rgba(37,211,102,0.5); }
+/* Testimonials */
+.testimonial-card {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-left: 4px solid var(--color-acento);
+  padding: 2rem;
+  border-radius: 2px;
+  position: relative;
+}
+.testimonial-card::before {
+  content: '"';
+  font-family: 'Playfair Display', serif;
+  font-size: 4rem;
+  color: var(--color-acento);
+  opacity: 0.3;
+  position: absolute;
+  top: -10px;
+  left: 16px;
+  line-height: 1;
+}
+/* Step cards */
+.step-card {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  padding: 1.5rem;
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+}
+.step-num {
+  background: var(--color-primario);
+  color: white;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+/* Diagnostic CTA section */
+.diagnostic-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: rgba(255,255,255,0.1);
+}
+@media (max-width: 768px) { .diagnostic-grid { grid-template-columns: 1fr; } }
+.diagnostic-item {
+  padding: 1.5rem 2rem;
+  background: rgba(255,255,255,0.05);
+}
+</style>
+</head>
+<body class="text-slate-900 overflow-x-hidden">
 </head>
 <body class="text-slate-900 overflow-x-hidden">
 
-    <!-- Navegación Ajustada: Tipografías más grandes -->
-    <nav class="sticky top-0 z-50 bg-brand-primary text-white py-3 md:py-4 shadow-lg">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 flex justify-between items-center">
-            <div class="flex items-center gap-3 md:gap-6">
-                <img src="logofondotransp.png" alt="Logo de MR Consultora" class="header-logo" onerror="this.style.display='none'">
-                <div class="flex flex-col border-l border-white/20 pl-3 md:pl-6">
-                </div>
-            </div>
-            <!-- Enlaces de navegación con tamaño ajustado -->
-            <div class="flex gap-4 sm:gap-6 md:gap-10 text-[10px] md:text-[13px] font-bold uppercase tracking-tight sm:tracking-widest">
-                <a href="#inicio" class="hover:text-brand-accent transition-colors">Inicio</a>
-                <a href="#nosotros" class="hover:text-brand-accent transition-colors">Nosotros</a>
-                <a href="#planes" class="hover:text-brand-accent transition-colors">Planes</a>
-                <a href="#contacto" class="text-brand-accent font-extrabold border-b-2 border-brand-accent/40">Contacto</a>
-            </div>
+<!-- Navegación -->
+<nav class="sticky top-0 z-50 bg-brand-primary text-white py-3 md:py-4 shadow-lg">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 flex justify-between items-center">
+    <div class="flex items-center gap-3 md:gap-6">
+      <img src="logofondotransp.png" alt="Logo de MR Consultora" class="header-logo" onerror="this.style.display='none'">
+    </div>
+    <div class="flex gap-4 sm:gap-6 md:gap-10 text-[10px] md:text-[13px] font-bold uppercase tracking-tight sm:tracking-widest">
+      <a href="#inicio" class="hover:text-brand-accent transition-colors">Inicio</a>
+      <a href="#proceso" class="hover:text-brand-accent transition-colors">Cómo trabajamos</a>
+      <a href="#nosotros" class="hover:text-brand-accent transition-colors">Nosotros</a>
+      <a href="#planes" class="hover:text-brand-accent transition-colors">Planes</a>
+      <a href="#diagnostico" class="text-brand-accent font-extrabold border-b-2 border-brand-accent/40">Diagnóstico</a>
+    </div>
+  </div>
+</nav>
+
+<!-- Hero Section — NUEVA HEADLINE -->
+<header id="inicio" class="bg-brand-primary text-white py-20 md:py-32 px-6 relative overflow-hidden">
+  <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16 items-center relative z-10">
+    <div>
+      <p class="text-brand-accent text-xs font-bold uppercase tracking-widest mb-4">Consultoría de Gestión · San Rafael, Mendoza</p>
+      <h1 class="text-4xl md:text-6xl font-bold leading-tight mb-6 md:mb-8 italic">
+        ¿Cuánto pierde su empresa por <span class="text-brand-accent">decidir sin datos?</span>
+      </h1>
+      <p class="text-lg md:text-xl text-slate-300 font-light mb-8 md:mb-10 max-w-lg leading-relaxed">
+        Instalamos el sistema que convierte los números de su empresa en decisiones rentables — con un Cuadro de Mando Integral y visualización en Power BI.
+      </p>
+      <div class="mb-8 md:mb-10">
+        <p class="slogan-banner text-[10px] md:text-[12px] uppercase text-brand-accent">
+          Solidez legal y Estrategia de crecimiento para PyMEs.
+        </p>
+      </div>
+      <div class="flex flex-col sm:flex-row gap-4 md:gap-6">
+        <a href="#diagnostico" class="bg-brand-accent text-brand-primary px-8 md:px-10 py-4 rounded-sm font-bold hover:bg-white transition-all shadow-xl uppercase text-[10px] md:text-xs tracking-widest text-center">Agendá tu Diagnóstico Gratuito →</a>
+        <a href="#proceso" class="border border-white/30 text-white px-8 md:px-10 py-4 rounded-sm font-bold hover:border-brand-accent hover:text-brand-accent transition-all uppercase text-[10px] md:text-xs tracking-widest text-center">Cómo trabajamos</a>
+      </div>
+    </div>
+    <div class="hidden md:block">
+      <div class="p-10 border-l-4 border-brand-accent bg-white/5 rounded-sm backdrop-blur-sm">
+        <h3 class="text-xl font-bold mb-6 italic text-brand-accent">El problema que resolvemos:</h3>
+        <div class="space-y-4">
+          <div class="flex items-start gap-3">
+            <div class="w-2 h-2 bg-brand-accent rounded-full mt-2 flex-shrink-0"></div>
+            <p class="text-slate-300 text-sm leading-relaxed">Vendés bien pero a fin de mes no te queda dinero — ciclo financiero roto.</p>
+          </div>
+          <div class="flex items-start gap-3">
+            <div class="w-2 h-2 bg-brand-accent rounded-full mt-2 flex-shrink-0"></div>
+            <p class="text-slate-300 text-sm leading-relaxed">No sabés cuál es tu producto más rentable — precios calculados por instinto.</p>
+          </div>
+          <div class="flex items-start gap-3">
+            <div class="w-2 h-2 bg-brand-accent rounded-full mt-2 flex-shrink-0"></div>
+            <p class="text-slate-300 text-sm leading-relaxed">Tu personal trabaja sin legajos completos — bomba de tiempo laboral.</p>
+          </div>
         </div>
-    </nav>
-
-    <!-- Hero Section -->
-    <header id="inicio" class="bg-brand-primary text-white py-20 md:py-32 px-6 relative overflow-hidden">
-        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16 items-center relative z-10">
-            <div>
-                <h1 class="text-4xl md:text-7xl font-bold leading-tight mb-6 md:mb-8 italic">
-                    Su empresa merece una <span class="text-brand-accent">gestión profesional</span> de alto nivel.
-                </h1>
-                <p class="text-lg md:text-xl text-slate-300 font-light mb-8 md:mb-10 max-w-lg leading-relaxed">
-                    Ayudamos a nuestros clientes a mejorar la gestión de su negocio diseñando estrategias de crecimiento innovadoras, explotando el poder de la tecnología digital, transformando las operaciones y aprovechando todo el potencial de los recursos humanos, para transicionar de la gestión reactiva a la implementación de una visión estratégica.
-                </p>
-                <div class="mb-8 md:mb-10">
-                    <p class="slogan-banner text-[10px] md:text-[12px] uppercase text-brand-accent">
-                        Solidez legal y Estrategia de crecimiento para PyMEs.
-                </p>
-                </div>
-                <div class="flex flex-col sm:flex-row gap-4 md:gap-6">
-                    <a href="https://wa.me/5492604849021?text=Hola,%20me%20comunico%20para%20solicitar%20una%20consulta%20con%20MR%20Consultora%20de%20Negocios" target="_blank" class="bg-brand-accent text-brand-primary px-8 md:px-10 py-4 rounded-sm font-bold hover:bg-white transition-all shadow-xl uppercase text-[10px] md:text-xs tracking-widest text-center">Agendar Diagnóstico</a>
-                </div>
-            </div>
-            <div class="hidden md:block">
-                <div class="p-12 border-l-4 border-brand-accent bg-white/5 rounded-sm backdrop-blur-sm">
-                    <h3 class="text-2xl font-bold mb-6 italic">El respaldo que su visión necesita.</h3>
-                    <p class="text-slate-400 leading-relaxed font-light mb-6">
-                        En la era de la información, el éxito no solo depende de los activos físicos, sino principalmente de la movilización inteligente de activos intangibles. Unificamos la Ingeniería Legal y la Estrategia de Costos para transformar la inercia operativa en rentabilidad real.
-                    </p>
-                </div>
-            </div>
+        <div class="mt-8 pt-6 border-t border-white/10">
+          <p class="text-brand-accent font-bold text-sm uppercase tracking-wider">Promedio de mejora en clientes MR:</p>
+          <p class="text-white text-3xl font-bold mt-1">+18% de margen operativo neto</p>
+          <p class="text-slate-400 text-xs mt-1">Sin aumentar ventas. Solo optimizando la estructura.</p>
         </div>
-    </header>
+      </div>
+    </div>
+  </div>
+</header>
 
-    <!-- Nosotros: Perfiles Profesionales con Nombres y Fotos (CENTRADO) -->
-    <section id="nosotros" class="py-16 md:py-28 px-6 max-w-7xl mx-auto">
-        <div class="text-center mb-16 md:mb-24">
-            <h2 class="text-3xl md:text-5xl font-bold text-brand-primary mb-4 italic">Dirección Estratégica</h2>
-            <p class="text-slate-500 uppercase tracking-widest text-xs md:text-sm">Experiencia y formación académica al servicio de su empresa</p>
-            <div class="w-16 md:w-24 h-1 bg-brand-accent mx-auto mt-4 md:mt-6"></div>
+<!-- SECCIÓN CÓMO TRABAJAMOS — NUEVA -->
+<section id="proceso" class="py-16 md:py-24 px-6 bg-white border-b border-slate-100">
+  <div class="max-w-7xl mx-auto">
+    <div class="text-center mb-12 md:mb-16">
+      <h2 class="text-3xl md:text-5xl font-bold text-brand-primary mb-4 italic">Nuestro Proceso de Intervención</h2>
+      <p class="text-slate-500 uppercase tracking-widest text-xs md:text-sm">Del diagnóstico al tablero — en 4 semanas</p>
+      <div class="w-16 md:w-24 h-1 bg-brand-accent mx-auto mt-4 md:mt-6"></div>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div class="step-card flex-col text-center p-6">
+        <div class="step-num mx-auto mb-4" style="width:56px;height:56px;font-size:1.25rem;">01</div>
+        <h3 class="font-bold text-brand-primary text-base mb-2 uppercase tracking-wide">Diagnóstico</h3>
+        <p class="text-xs text-slate-500 uppercase tracking-wider font-semibold mb-3 text-brand-accent">Semana 1</p>
+        <p class="text-sm text-slate-600 leading-relaxed">Relevamiento técnico de la estructura actual: costos, márgenes, contratos, carga laboral y flujo de fondos.</p>
+      </div>
+      <div class="step-card flex-col text-center p-6">
+        <div class="step-num mx-auto mb-4" style="width:56px;height:56px;font-size:1.25rem;">02</div>
+        <h3 class="font-bold text-brand-primary text-base mb-2 uppercase tracking-wide">Diseño</h3>
+        <p class="text-xs text-slate-500 uppercase tracking-wider font-semibold mb-3 text-brand-accent">Semanas 2-3</p>
+        <p class="text-sm text-slate-600 leading-relaxed">Diseño del Cuadro de Mando Integral personalizado y definición de los indicadores clave (KPIs) de su industria.</p>
+      </div>
+      <div class="step-card flex-col text-center p-6">
+        <div class="step-num mx-auto mb-4" style="width:56px;height:56px;font-size:1.25rem;">03</div>
+        <h3 class="font-bold text-brand-primary text-base mb-2 uppercase tracking-wide">Instalación</h3>
+        <p class="text-xs text-slate-500 uppercase tracking-wider font-semibold mb-3 text-brand-accent">Semanas 3-4</p>
+        <p class="text-sm text-slate-600 leading-relaxed">Implementación del CMI en Power BI. Capacitación al equipo directivo para interpretar y usar el tablero.</p>
+      </div>
+      <div class="step-card flex-col text-center p-6 border-brand-accent" style="border-left-color: var(--color-acento); border-left-width: 3px;">
+        <div class="step-num mx-auto mb-4" style="width:56px;height:56px;font-size:1.25rem;background:var(--color-acento);color:var(--color-primario);">04</div>
+        <h3 class="font-bold text-brand-primary text-base mb-2 uppercase tracking-wide">Control Continuo</h3>
+        <p class="text-xs text-slate-500 uppercase tracking-wider font-semibold mb-3 text-brand-accent">Mes 2 en adelante</p>
+        <p class="text-sm text-slate-600 leading-relaxed">Seguimiento mensual de indicadores, ajuste de estrategia y soporte técnico permanente.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Nosotros: Perfiles Profesionales -->
+<section id="nosotros" class="py-16 md:py-28 px-6 max-w-7xl mx-auto">
+  <div class="text-center mb-16 md:mb-24">
+    <h2 class="text-3xl md:text-5xl font-bold text-brand-primary mb-4 italic">Dirección Estratégica</h2>
+    <p class="text-slate-500 uppercase tracking-widest text-xs md:text-sm">Experiencia y formación académica al servicio de su empresa</p>
+    <div class="w-16 md:w-24 h-1 bg-brand-accent mx-auto mt-4 md:mt-6"></div>
+  </div>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20">
+    <!-- Perfil Legal -->
+    <div class="flex flex-col items-center text-center p-6 md:p-10 border border-slate-100 bg-white shadow-sm hover:shadow-md transition-shadow rounded-sm">
+      <img src="fotoabogada.png" alt="Florencia Melia — Área Legal" class="profile-img mb-6">
+      <p class="text-xl md:text-2xl font-serif text-brand-primary italic font-bold mb-1">Florencia Melia</p>
+      <h3 class="text-xl md:text-2xl font-bold text-slate-500 mb-4 uppercase tracking-widest">Área Legal Corporativa</h3>
+      <p class="text-lg md:text-xl text-slate-700 leading-relaxed mb-6 italic font-medium max-w-md">
+        Abogada especialista en Derecho de Empresa y maestranda en MBA UNCuyo.
+      </p>
+      <p class="text-base md:text-lg text-slate-600 leading-relaxed mb-8 max-w-md">
+        Se enfoca en la Ingeniería Legal Preventiva para blindar el patrimonio de la empresa y asegurar que cada acuerdo contractual sea una herramienta de crecimiento. Su visión de negocios permite transformar el marco legal en una ventaja competitiva.
+      </p>
+      <ul class="custom-list text-xs md:text-sm text-slate-500 font-bold uppercase tracking-wider space-y-2 text-left">
+        <li>Blindaje laboral y gestión de personal</li>
+        <li>Compliance y Gestión de Riesgos Regulatorios</li>
+        <li>Creación y gobernanza societaria</li>
+        <li>Ingeniería contractual y resguardo patrimonial</li>
+        <li>Protección de activos intangibles (marcas/patentes)</li>
+      </ul>
+    </div>
+    <!-- Perfil Contable -->
+    <div class="flex flex-col items-center text-center p-6 md:p-10 border border-slate-100 bg-white shadow-sm hover:shadow-md transition-shadow rounded-sm">
+      <img src="fotocontable.png" alt="Emiliano Riba — Área Contable" class="profile-img mb-6">
+      <p class="text-xl md:text-2xl font-serif text-brand-primary italic font-bold mb-1">Emiliano Riba</p>
+      <h3 class="text-xl md:text-2xl font-bold text-slate-500 mb-4 uppercase tracking-widest">Área Contable y de Costos</h3>
+      <p class="text-lg md:text-xl text-slate-700 leading-relaxed mb-6 italic font-medium max-w-md">
+        Contador Público con Especialización en Costos y Gestión Empresarial UNCuyo.
+      </p>
+      <p class="text-base md:text-lg text-slate-600 leading-relaxed mb-8 max-w-md">
+        Experto en el análisis técnico de rentabilidad y optimización del flujo de fondos. Su metodología permite detectar fugas de liquidez y comprender el rendimiento real de su Ciclo Dinero-Mercadería-Dinero.
+      </p>
+      <ul class="custom-list text-xs md:text-sm text-slate-500 font-bold uppercase tracking-wider space-y-2 text-left">
+        <li>Ingeniería de costos y precios</li>
+        <li>Creación y evaluación de proyectos (ROI)</li>
+        <li>Control de gestión financiera</li>
+        <li>Regularización tributaria y fiscal</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- SECCIÓN TESTIMONIOS — NUEVA -->
+<section id="testimonios" class="py-16 md:py-24 px-6 bg-slate-50 border-y border-slate-200">
+  <div class="max-w-7xl mx-auto">
+    <div class="text-center mb-12 md:mb-16">
+      <h2 class="text-3xl md:text-4xl font-bold text-brand-primary mb-4 italic">Lo que dicen nuestros clientes</h2>
+      <p class="text-slate-500 uppercase tracking-widest text-xs md:text-sm">Empresas de San Rafael y zona que profesionalizaron su gestión</p>
+      <div class="w-16 md:w-24 h-1 bg-brand-accent mx-auto mt-4 md:mt-6"></div>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div class="testimonial-card">
+        <div class="pt-6">
+          <p class="text-slate-600 leading-relaxed text-sm mb-6">
+            "Antes tomaba decisiones mirando el extracto bancario y rezando. Hoy tengo el tablero actualizado cada semana. En 3 meses detecté que dos de mis cinco productos operaban en pérdida real. Eso cambió todo."
+          </p>
+          <div class="border-t border-slate-100 pt-4">
+            <p class="font-bold text-brand-primary text-sm">Dueño de empresa de distribución</p>
+            <p class="text-slate-400 text-xs uppercase tracking-wider">San Rafael, Mendoza · 12 empleados</p>
+          </div>
         </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20">
-            <!-- Perfil Legal (Florencia Melia) -->
-            <div class="flex flex-col items-center text-center p-6 md:p-10 border border-slate-100 bg-white shadow-sm hover:shadow-md transition-shadow rounded-sm">
-                <img src="fotoabogada.png" alt="Socia Área Legal" class="profile-img mb-6">
-                <!-- Nombre Personalizado -->
-                <p class="text-xl md:text-2xl font-serif text-brand-primary italic font-bold mb-1">Florencia Melia</p>
-                <h3 class="text-xl md:text-2xl font-bold text-slate-500 mb-4 uppercase tracking-widest">Área Legal Corporativa</h3>
-                <p class="text-lg md:text-xl text-slate-700 leading-relaxed mb-6 italic font-medium max-w-md">
-                   Abogada especialista en Derecho de Empresa y maestranda en MBA UNCuyo.
-                </p>
-                <p class="text-base md:text-lg text-slate-600 leading-relaxed mb-8 max-w-md">
-                    Se enfoca en la Ingeniería Legal Preventiva para blindar el patrimonio de la empresa y asegurar que cada acuerdo contractual sea una herramienta de crecimiento. Su visión de negocios permite transformar el marco legal en una ventaja competitiva.
-                </p>
-                <ul class="custom-list text-xs md:text-sm text-slate-500 font-bold uppercase tracking-wider space-y-2 text-left">
-                    <li>Blindaje laboral y gestión de personal</li>
-                    <li>Compliance y Gestión de Riesgos Regulatorios</li>
-                    <li>Creación y gobernanza societaria</li>
-                    <li>Ingeniería contractual y resguardo patrimonial</li>
-                    <li>Protección de activos intangibles (marcas/patentes)</li>
-                </ul>
-            </div>
-
-            <!-- Perfil Contable (Emiliano Riba) -->
-            <div class="flex flex-col items-center text-center p-6 md:p-10 border border-slate-100 bg-white shadow-sm hover:shadow-md transition-shadow rounded-sm">
-                <img src="fotocontable.png" alt="Socio Área Contable" class="profile-img mb-6">
-                <!-- Nombre Personalizado -->
-                <p class="text-xl md:text-2xl font-serif text-brand-primary italic font-bold mb-1">Emiliano Riba</p>
-                <h3 class="text-xl md:text-2xl font-bold text-slate-500 mb-4 uppercase tracking-widest">Área Contable y de Costos</h3>
-                <p class="text-lg md:text-xl text-slate-700 leading-relaxed mb-6 italic font-medium max-w-md">
-                    Contador Público con Especialización en Costos y Gestión Empresarial UNCuyo.
-                </p>
-                <p class="text-base md:text-lg text-slate-600 leading-relaxed mb-8 max-w-md">
-                    Experto en el análisis técnico de rentabilidad y optimización del flujo de fondos. Su metodología permite detectar fugas de liquidez y comprender el rendimiento real de su Ciclo Dinero-Mercadería-Dinero.
-                </p>
-                <ul class="custom-list text-xs md:text-sm text-slate-500 font-bold uppercase tracking-wider space-y-2 text-left">
-                    <li>Ingeniería de costos y precios</li>
-                    <li>Creación y evaluación de proyectos (ROI)</li>
-                    <li>Control de gestión financiera</li>
-                    <li>Regularización tributaria y fiscal</li>
-                </ul>
-            </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="pt-6">
+          <p class="text-slate-600 leading-relaxed text-sm mb-6">
+            "Recibí una carta documento laboral y MR ya tenía todos los legajos en orden. El juicio no prosperó. Sin ese blindaje previo, el costo hubiera sido devastador para la empresa. No es un gasto, es una inversión."
+          </p>
+          <div class="border-t border-slate-100 pt-4">
+            <p class="font-bold text-brand-primary text-sm">Director de empresa de construcción</p>
+            <p class="text-slate-400 text-xs uppercase tracking-wider">San Rafael, Mendoza · 18 empleados</p>
+          </div>
         </div>
-    </section>
-
-    <!-- El resto de las secciones (Planes, Contacto, Consulta, Footer) permanecen igual... -->
-    <!-- [MANTENIENDO EL CÓDIGO PREVIO PARA LA INTEGRIDAD DEL ARCHIVO] -->
-
-    <!-- Planes Estratégicos con Letra Grande, Clara y Responsive -->
-    <section id="planes" class="py-16 md:py-28 px-6 bg-slate-50 border-y border-slate-200">
-        <div class="max-w-7xl mx-auto text-center">
-            <h2 class="text-3xl md:text-5xl font-bold text-brand-primary mb-4 italic">Planes de Intervención Estratégica</h2>
-            <p class="text-slate-500 uppercase tracking-widest text-xs md:text-sm mb-12 md:mb-20">Soluciones escalables diseñadas para PyMEs con visión de futuro</p>
-
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 md:gap-10">
-                <!-- Plan 1 -->
-                <div class="bg-white p-8 md:p-12 border border-slate-200 flex flex-col hover:border-brand-secondary transition-all rounded-sm shadow-sm text-left">
-                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-[0.2em] mb-4">Cimientos de Gestión</h3>
-                    <h4 class="text-xl md:text-2xl font-bold text-brand-primary mb-6">Plan Emprendedor Organizado</h4>
-                    <p class="text-sm md:text-base text-slate-600 mb-8 leading-relaxed">Cimientos profesionales para negocios en etapa de organización que buscan orden administrativo y soporte técnico recurrente.</p>
-                    <ul class="custom-list text-xs md:text-sm text-slate-600 mb-10 md:mb-12 flex-grow space-y-2">
-                        <li>Gestión administrativa y cumplimiento fiscal.</li>
-                        <li>Asesoría técnica permanente para consultas de gestión.</li>
-                        <li>Revisión de contratos y acuerdos operativos.</li>
-                    </ul>
-                    <a href="https://wa.me/5492604849021?text=Hola,%20me%20comunico%20para%20solicitar%20una%20consulta%20con%20MR%20Consultora%20de%20Negocios" target="_blank" class="block text-center py-4 md:py-5 border-2 border-brand-primary font-bold text-brand-primary hover:bg-brand-primary hover:text-white transition-all uppercase text-[10px] md:text-[11px] tracking-widest">Solicitar cotización personalizada</a>
-                </div>
-
-                <!-- Plan 2 -->
-                <div class="bg-brand-primary p-8 md:p-12 shadow-2xl flex flex-col transform lg:scale-105 relative border-2 border-brand-accent rounded-sm text-left text-white">
-                    <div class="absolute -top-4 left-6 md:left-10 bg-brand-accent text-brand-primary px-4 md:px-5 py-1 text-[9px] md:text-[10px] font-bold uppercase tracking-widest shadow-md">Recomendado</div>
-                    <h3 class="text-xs font-bold text-brand-accent uppercase tracking-[0.2em] mb-4 opacity-90">Estrategia Avanzada</h3>
-                    <h4 class="text-xl md:text-2xl font-bold text-brand-accent mb-6">Plan PyME Rentable</h4>
-                    <p class="text-sm md:text-base text-slate-300 mb-6 leading-relaxed">Acompañamiento integral para empresas con nómina de empleados, stock de mercadería y estructura de costos compleja. Incluye de forma íntegra los servicios del Plan 1.</p>
-                    <p class="text-[10px] text-brand-accent font-bold uppercase mb-6 md:mb-8 tracking-wider italic">Optimización de rentabilidad, eficiencia de Capital de Trabajo y blindaje laboral.</p>
-                    <ul class="custom-list text-xs md:text-sm text-white/90 mb-10 md:mb-12 flex-grow space-y-2">
-                        <li>Instalación de Cuadro de Mando Integral.</li>
-                        <li>Análisis de costos y márgenes de rentabilidad.</li>
-                        <li>Eficiencia operativa del Capital de Trabajo.</li>
-                        <li>Diseño de reglamentos y blindaje laboral.</li>
-                        <li>Gestión técnica de cobranzas y morosidad.</li>
-                    </ul>
-                    <a href="https://wa.me/5492604849021?text=Hola,%20me%20comunico%20para%20solicitar%20una%20consulta%20con%20MR%20Consultora%20de%20Negocios" target="_blank" class="block text-center py-4 md:py-5 bg-brand-secondary font-bold text-white hover:bg-white hover:text-brand-primary transition-all uppercase text-[10px] md:text-[11px] tracking-widest shadow-lg">Solicitar cotización personalizada</a>
-                </div>
-
-                <!-- Plan 3 -->
-                <div class="bg-white p-8 md:p-12 border border-slate-200 flex flex-col hover:border-brand-secondary transition-all rounded-sm shadow-sm text-left">
-                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-[0.2em] mb-4">Estrategia Global</h3>
-                    <h4 class="text-xl md:text-2xl font-bold text-brand-primary mb-6">Plan Consultoría Senior</h4>
-                    <p class="text-sm md:text-base text-slate-600 mb-6 leading-relaxed">Nivel máximo de soporte estratégico para sociedades, empresas familiares en transición generacional o expansión. Incluye servicios del Plan 1 y 2.</p>
-                    <ul class="custom-list text-xs md:text-sm text-slate-600 mb-10 md:mb-12 flex-grow space-y-2">
-                        <li>Evaluación de Inversiones (VAN/TIR).</li>
-                        <li>Dirección estratégica financiera y flujos proyectados.</li>
-                        <li>Derecho societario avanzado y protocolos familiares.</li>
-                        <li>Auditoría técnica de procesos e ineficiencias.</li>
-                    </ul>
-                    <a href="https://wa.me/5492604849021?text=Hola,%20me%20comunico%20para%20solicitar%20una%20consulta%20con%20MR%20Consultora%20de%20Negocios" target="_blank" class="block text-center py-4 md:py-5 border-2 border-brand-primary font-bold text-brand-primary hover:bg-brand-primary hover:text-white transition-all uppercase text-[10px] md:text-[11px] tracking-widest">Solicitar cotización personalizada</a>
-                </div>
-            </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="pt-6">
+          <p class="text-slate-600 leading-relaxed text-sm mb-6">
+            "Tenía contador desde hace 10 años y nunca supe cuál era mi margen real por producto. Con MR lo descubrí en el primer mes. Ajusté precios en dos líneas y mejoré mi rentabilidad sin vender más."
+          </p>
+          <div class="border-t border-slate-100 pt-4">
+            <p class="font-bold text-brand-primary text-sm">Propietaria de comercio mayorista</p>
+            <p class="text-slate-400 text-xs uppercase tracking-wider">San Rafael, Mendoza · 8 empleados</p>
+          </div>
         </div>
-    </section>
+      </div>
+    </div>
+  </div>
+</section>
 
-    <!-- Canales de Comunicación -->
-    <section id="contacto" class="py-16 md:py-24 bg-white px-6">
-        <div class="max-w-7xl mx-auto">
-            <div class="mb-12 md:mb-16">
-                <h2 class="text-3xl md:text-4xl font-bold text-brand-primary mb-4 italic">Canales de Comunicación</h2>
-                <p class="text-slate-500 uppercase tracking-widest text-xs md:text-sm">Información de contacto directo</p>
-                <div class="w-12 md:w-16 h-0.5 bg-brand-accent mt-4"></div>
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12 text-center md:text-left">
-                <div class="p-8 border border-slate-100 rounded-sm">
-                    <span class="contact-label">Dirección</span>
-                    <p class="text-brand-primary font-semibold text-lg md:text-xl">Santa Fe N° 15</p>
-                    <p class="text-slate-500 text-sm md:text-base">San Rafael, Mendoza</p>
-                </div>
-                <!-- Línea Directa con WhatsApp integrado -->
-                <a href="https://wa.me/5492604849021?text=Hola,%20me%20comunico%20para%20solicitar%20una%20consulta%20con%20MR%20Consultora%20de%20Negocios" target="_blank" class="p-8 border border-slate-100 rounded-sm hover:border-brand-secondary transition-all group">
-                    <span class="contact-label">Línea Directa</span>
-                    <div class="flex items-center justify-center md:justify-start gap-2">
-                        <svg class="w-6 h-6 text-emerald-500 fill-current" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766 0-3.18-2.587-5.771-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217s.231.001.332.005c.109.004.258-.041.404.308.159.386.542 1.32.588 1.412.046.092.076.198.015.311-.06.113-.091.193-.181.297-.09.104-.181.232-.259.311-.089.09-.181.188-.077.367.103.179.458.753.985 1.221.677.602 1.248.788 1.427.873.179.085.283.071.388-.051.105-.122.448-.523.568-.702.12-.179.24-.15.404-.091.164.059 1.04.49 1.217.579.178.089.297.132.34.207.044.075.044.433-.1.838zM12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0m0 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
-                        <p class="text-brand-primary font-semibold text-lg md:text-xl group-hover:text-brand-secondary transition-colors">2604849021</p>
-                    </div>
-                    <p class="text-slate-500 text-sm md:text-base">WhatsApp Directo</p>
-                </a>
-                <div class="p-8 border border-slate-100 rounded-sm">
-                    <span class="contact-label">Presencia Digital</span>
-                    <div class="flex justify-center md:justify-start gap-5 mt-4">
-                        <a href="https://wa.me/5492604849021?text=Hola,%20me%20comunico%20para%20solicitar%20una%20consulta%20con%20MR%20Consultora%20de%20Negocios" target="_blank" class="text-brand-primary hover:text-emerald-500 transition-colors" title="WhatsApp">
-                            <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766 0-3.18-2.587-5.771-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217s.231.001.332.005c.109.004.258-.041.404.308.159.386.542 1.32.588 1.412.046.092.076.198.015.311-.06.113-.091.193-.181.297-.09.104-.181.232-.259.311-.089.09-.181.188-.077.367.103.179.458.753.985 1.221.677.602 1.248.788 1.427.873.179.085.283.071.388-.051.105-.122.448-.523.568-.702.12-.179.24-.15.404-.091.164.059 1.04.49 1.217.579.178.089.297.132.34.207.044.075.044.433-.1.838z"/></svg>
-                        </a>
-                        <a href="https://www.linkedin.com/company/mr-gestor%C3%ADa/" target="_blank" class="text-brand-primary hover:text-brand-secondary transition-colors" title="LinkedIn">
-                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
-                        </a>
-                        <a href="https://www.instagram.com/mr_consultora_empresarial/" target="_blank" class="text-brand-primary hover:text-brand-secondary transition-colors" title="Instagram">
-                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
-                        </a>
-                        <a href="https://www.facebook.com/mrgestores/" target="_blank" class="text-brand-primary hover:text-brand-secondary transition-colors" title="Facebook">
-                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c5.05-.5 9-4.76 9-9.95z"/></svg>
-                        </a>
-                    </div>
-                </div>
-            </div>
+<!-- Planes Estratégicos -->
+<section id="planes" class="py-16 md:py-28 px-6 bg-white border-b border-slate-200">
+  <div class="max-w-7xl mx-auto text-center">
+    <h2 class="text-3xl md:text-5xl font-bold text-brand-primary mb-4 italic">Planes de Intervención Estratégica</h2>
+    <p class="text-slate-500 uppercase tracking-widest text-xs md:text-sm mb-12 md:mb-20">Soluciones escalables diseñadas para PyMEs con visión de futuro</p>
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 md:gap-10">
+      <!-- Plan 1 -->
+      <div class="bg-white p-8 md:p-12 border border-slate-200 flex flex-col hover:border-brand-secondary transition-all rounded-sm shadow-sm text-left">
+        <h3 class="text-xs font-bold text-slate-400 uppercase tracking-[0.2em] mb-4">Cimientos de Gestión</h3>
+        <h4 class="text-xl md:text-2xl font-bold text-brand-primary mb-6">Plan Emprendedor Organizado</h4>
+        <p class="text-sm md:text-base text-slate-600 mb-8 leading-relaxed">Cimientos profesionales para negocios en etapa de organización que buscan orden administrativo y soporte técnico recurrente.</p>
+        <ul class="custom-list text-xs md:text-sm text-slate-600 mb-10 md:mb-12 flex-grow space-y-2">
+          <li>Gestión administrativa y cumplimiento fiscal.</li>
+          <li>Asesoría técnica permanente para consultas de gestión.</li>
+          <li>Revisión de contratos y acuerdos operativos.</li>
+        </ul>
+        <a href="https://wa.me/5492604849021?text=Hola%2C%20me%20interesa%20el%20Plan%20Emprendedor%20Organizado%20de%20MR%20Consultora" target="_blank" class="block text-center py-4 md:py-5 border-2 border-brand-primary font-bold text-brand-primary hover:bg-brand-primary hover:text-white transition-all uppercase text-[10px] md:text-[11px] tracking-widest">Solicitar cotización personalizada</a>
+      </div>
+      <!-- Plan 2 — DESTACADO -->
+      <div class="bg-brand-primary p-8 md:p-12 shadow-2xl flex flex-col transform lg:scale-105 relative border-2 border-brand-accent rounded-sm text-left text-white">
+        <div class="absolute -top-4 left-6 md:left-10 bg-brand-accent text-brand-primary px-4 md:px-5 py-1 text-[9px] md:text-[10px] font-bold uppercase tracking-widest shadow-md">Recomendado</div>
+        <h3 class="text-xs font-bold text-brand-accent uppercase tracking-[0.2em] mb-4 opacity-90">Estrategia Avanzada</h3>
+        <h4 class="text-xl md:text-2xl font-bold text-brand-accent mb-6">Plan PyME Rentable</h4>
+        <p class="text-sm md:text-base text-slate-300 mb-6 leading-relaxed">Acompañamiento integral para empresas con nómina de empleados, stock de mercadería y estructura de costos compleja. Incluye de forma íntegra los servicios del Plan 1.</p>
+        <p class="text-[10px] text-brand-accent font-bold uppercase mb-6 md:mb-8 tracking-wider italic">Optimización de rentabilidad, eficiencia de Capital de Trabajo y blindaje laboral.</p>
+        <ul class="custom-list text-xs md:text-sm text-white/90 mb-10 md:mb-12 flex-grow space-y-2">
+          <li>Instalación de Cuadro de Mando Integral en Power BI.</li>
+          <li>Análisis de costos y márgenes de rentabilidad por producto.</li>
+          <li>Eficiencia operativa del Capital de Trabajo.</li>
+          <li>Diseño de reglamentos y blindaje laboral preventivo.</li>
+          <li>Gestión técnica de cobranzas y morosidad.</li>
+        </ul>
+        <a href="https://wa.me/5492604849021?text=Hola%2C%20me%20interesa%20el%20Plan%20PyME%20Rentable%20de%20MR%20Consultora" target="_blank" class="block text-center py-4 md:py-5 bg-brand-secondary font-bold text-white hover:bg-white hover:text-brand-primary transition-all uppercase text-[10px] md:text-[11px] tracking-widest shadow-lg">Solicitar cotización personalizada</a>
+      </div>
+      <!-- Plan 3 -->
+      <div class="bg-white p-8 md:p-12 border border-slate-200 flex flex-col hover:border-brand-secondary transition-all rounded-sm shadow-sm text-left">
+        <h3 class="text-xs font-bold text-slate-400 uppercase tracking-[0.2em] mb-4">Estrategia Global</h3>
+        <h4 class="text-xl md:text-2xl font-bold text-brand-primary mb-6">Plan Consultoría Senior</h4>
+        <p class="text-sm md:text-base text-slate-600 mb-6 leading-relaxed">Nivel máximo de soporte estratégico para sociedades, empresas familiares en transición generacional o expansión. Incluye servicios del Plan 1 y 2.</p>
+        <ul class="custom-list text-xs md:text-sm text-slate-600 mb-10 md:mb-12 flex-grow space-y-2">
+          <li>Evaluación de Inversiones (VAN/TIR).</li>
+          <li>Dirección estratégica financiera y flujos proyectados.</li>
+          <li>Derecho societario avanzado y protocolos familiares.</li>
+          <li>Auditoría técnica de procesos e ineficiencias.</li>
+        </ul>
+        <a href="https://wa.me/5492604849021?text=Hola%2C%20me%20interesa%20el%20Plan%20Consultor%C3%ADa%20Senior%20de%20MR%20Consultora" target="_blank" class="block text-center py-4 md:py-5 border-2 border-brand-primary font-bold text-brand-primary hover:bg-brand-primary hover:text-white transition-all uppercase text-[10px] md:text-[11px] tracking-widest">Solicitar cotización personalizada</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECCIÓN DIAGNÓSTICO TÉCNICO — NUEVA -->
+<section id="diagnostico" class="py-16 md:py-24 px-6 bg-brand-primary text-white">
+  <div class="max-w-7xl mx-auto">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20 items-center">
+      <div>
+        <p class="text-brand-accent text-xs font-bold uppercase tracking-widest mb-4">Primer paso sin compromiso</p>
+        <h2 class="text-3xl md:text-5xl font-bold italic mb-6">Diagnóstico Técnico de Estructura</h2>
+        <p class="text-slate-300 text-base md:text-lg leading-relaxed mb-8">
+          No vendemos consultoría sin saber qué tiene roto su empresa. Por eso el primer paso siempre es el Diagnóstico. Analizamos su estructura real y entregamos un informe técnico con prioridades concretas.
+        </p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
+          <div class="border border-white/10 bg-white/5 p-4 rounded-sm">
+            <p class="text-brand-accent font-bold text-xs uppercase tracking-wider mb-2">Qué analizamos</p>
+            <ul class="text-sm text-slate-300 space-y-1">
+              <li>→ Estructura de costos y margen real</li>
+              <li>→ Ciclo de cobranzas y capital de trabajo</li>
+              <li>→ Nómina y exposición laboral</li>
+              <li>→ KPIs presentes o ausentes</li>
+            </ul>
+          </div>
+          <div class="border border-white/10 bg-white/5 p-4 rounded-sm">
+            <p class="text-brand-accent font-bold text-xs uppercase tracking-wider mb-2">Qué entregamos</p>
+            <ul class="text-sm text-slate-300 space-y-1">
+              <li>→ Informe técnico detallado</li>
+              <li>→ Mapa de prioridades por impacto</li>
+              <li>→ Propuesta de intervención específica</li>
+              <li>→ KPIs críticos de su industria</li>
+            </ul>
+          </div>
         </div>
-    </section>
-
-    <!-- Consulta Estratégica: Formulario -->
-    <section id="consulta" class="py-16 md:py-24 bg-slate-50 border-t border-slate-200 px-6">
-        <div class="max-w-3xl mx-auto">
-            <div class="text-center mb-12 md:mb-16">
-                <h2 class="text-3xl md:text-5xl font-bold italic text-brand-primary uppercase tracking-tighter">Inicie un proceso de profesionalización con nosotros</h2>
-                <p class="text-slate-400 uppercase tracking-widest text-xs md:text-sm mt-4">Agende una sesión de diagnóstico estratégico con nuestros expertos</p>
-            </div>
-            
-            <div class="bg-white p-6 md:p-16 shadow-sm border border-slate-100 rounded-sm overflow-hidden min-h-[400px]">
-                <!-- FORMULARIO: VISIBLE POR DEFECTO -->
-                <form id="contact-form" action="https://formspree.io/f/xbddawkw" method="POST" class="space-y-8 md:space-y-12">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
-                        <div class="border-b border-slate-200">
-                            <label class="text-[9px] md:text-[10px] font-bold uppercase text-slate-400 tracking-widest mb-3 block">Nombre y Apellido</label>
-                            <input type="text" name="nombre" required class="w-full py-3 md:py-4 outline-none focus:border-brand-secondary transition-all text-sm md:text-base" placeholder="Referente de la empresa">
-                        </div>
-                        <div class="border-b border-slate-200">
-                            <label class="text-[9px] md:text-[10px] font-bold uppercase text-slate-400 tracking-widest mb-3 block">Contacto</label>
-                            <input type="text" name="empresa" required class="w-full py-3 md:py-4 outline-none focus:border-brand-secondary transition-all text-sm md:text-base" placeholder="Correo electrónico / Celular">
-                        </div>
-                    </div>
-                    <div class="border-b border-slate-200">
-                        <label class="text-[9px] md:text-[10px] font-bold uppercase text-slate-400 tracking-widest mb-3 block">Área de Interés</label>
-                        <select name="interes" class="w-full py-3 md:py-4 outline-none bg-transparent text-sm md:text-base">
-                            <option value="pyme-rentable">Suscripción PyME Rentable</option>
-                            <option value="emprendedor">Plan Emprendedor Organizado</option>
-                            <option value="integral">Plan Consultoría Integral</option>
-                            <option value="otros">Otros Servicios de Negocios</option>
-                        </select>
-                    </div>
-                    <div class="border-b border-slate-200">
-                        <label class="text-[9px] md:text-[10px] font-bold uppercase text-slate-400 tracking-widest mb-3 block">Breve descripción de su consulta </label>
-                        <textarea name="mensaje" rows="4" required class="w-full py-3 md:py-4 outline-none focus:border-brand-secondary transition-all text-sm md:text-base" placeholder="¿Cómo podemos ayudarle a potenciar su empresa?"></textarea>
-                    </div>
-                    
-                    <button type="submit" id="submit-btn" class="w-full bg-brand-primary text-white py-5 md:py-6 font-bold uppercase tracking-widest text-[10px] md:text-sm hover:bg-brand-secondary transition-all shadow-md">Enviar consulta</button>
-                </form>
-
-                <!-- RESPUESTA AL FORMULARIO: OCULTA HASTA EL ENVÍO -->
-                <div id="form-status" class="text-center py-10 md:py-16">
-                    <div class="w-16 md:w-20 h-16 md:h-20 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-6 md:mb-8 text-2xl md:text-3xl font-bold">✓</div>
-                    <h3 class="text-2xl md:text-3xl font-bold text-brand-primary mb-4 italic">¡Consulta Enviada!</h3>
-                    <p class="text-slate-500 text-base md:text-lg max-w-md mx-auto">Hemos recibido su consulta correctamente. Un socio de la firma se pondrá en contacto con usted a la brevedad.</p>
-                    <button onclick="resetForm()" class="mt-8 md:mt-10 text-brand-secondary font-bold text-xs md:text-sm uppercase tracking-widest hover:underline">Enviar otra consulta</button>
-                </div>
-            </div>
+        <div class="flex flex-col sm:flex-row gap-4">
+          <a href="https://wa.me/5492604849021?text=Hola%2C%20quiero%20agendar%20un%20Diagn%C3%B3stico%20T%C3%A9cnico%20de%20Estructura%20con%20MR%20Consultora" target="_blank" class="bg-brand-accent text-brand-primary px-8 py-4 font-bold hover:bg-white transition-all shadow-xl uppercase text-[10px] md:text-xs tracking-widest text-center">Agendá tu Diagnóstico Gratuito →</a>
+          <a href="#contacto" class="border border-white/30 text-white px-8 py-4 font-bold hover:border-brand-accent hover:text-brand-accent transition-all uppercase text-[10px] md:text-xs tracking-widest text-center">Completar formulario</a>
         </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="py-16 md:py-24 bg-brand-primary text-center">
-        <div class="max-w-7xl mx-auto px-6 text-white/60">
-            <div class="flex flex-col items-center gap-6 md:gap-8 mb-12 md:mb-16">
-                <img src="logofondotransp.png" alt="Logo de MR Consultora" class="header-logo brightness-0 invert opacity-80" onerror="this.style.display='none'">
-                <div class="flex flex-col items-center">
-                </div>
-                <p class="text-[8px] md:text-xs uppercase tracking-[0.1em] md:tracking-[0.2em] text-brand-accent max-w-sm mx-auto px-4 italic">Solidez legal y Estrategia de crecimiento para PyMEs.</p>
-                
-                <div class="flex gap-6">
-                    <a href="https://www.linkedin.com/company/mr-gestor%C3%ADa/?viewAsMember=true" target="_blank" class="hover:text-brand-accent transition-colors">
-                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
-                    </a>
-                    <a href="https://www.instagram.com/mr_consultora_empresarial/" target="_blank" class="hover:text-brand-accent transition-colors">
-                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
-                    </a>
-                    <a href="https://www.facebook.com/mrgestores/" target="_blank" class="hover:text-brand-accent transition-colors">
-                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c5.05-.5 9-4.76 9-9.95z"/></svg>
-                    </a>
-                </div>
+        <p class="text-slate-500 text-xs mt-4">Para PyMEs de 5 a 30 empleados · San Rafael y zona · Respondemos en menos de 24hs</p>
+      </div>
+      <div class="hidden md:block">
+        <div class="border border-white/10 rounded-sm overflow-hidden">
+          <div class="bg-white/5 px-6 py-4 border-b border-white/10">
+            <p class="text-brand-accent font-bold text-xs uppercase tracking-wider">Los 5 KPIs que revisamos en el Diagnóstico</p>
+          </div>
+          <div class="divide-y divide-white/5">
+            <div class="px-6 py-4 flex justify-between items-center">
+              <p class="text-sm font-semibold">Margen de Contribución por producto</p>
+              <span class="text-xs bg-red-500/20 text-red-300 px-2 py-1 rounded">Crítico</span>
             </div>
-            <div class="text-[9px] md:text-xs text-white/40 space-y-2 md:space-y-3 mb-8 md:mb-10 uppercase tracking-widest px-4">
-                <p>Santa Fe N° 15, San Rafael, Mendoza</p>
-                <p>Tel: 2604849021 | info@mrconsultora.net.ar</p>
+            <div class="px-6 py-4 flex justify-between items-center">
+              <p class="text-sm font-semibold">Días de Cobranza</p>
+              <span class="text-xs bg-amber-500/20 text-amber-300 px-2 py-1 rounded">Alto impacto</span>
             </div>
-            <p class="text-[8px] md:text-[10px] text-white/20 uppercase tracking-[0.2em] pt-8 md:pt-12 border-t border-white/5 px-4">&copy; 2026 MR CONSULTORA | Consultoría Estratégica Integral</p>
+            <div class="px-6 py-4 flex justify-between items-center">
+              <p class="text-sm font-semibold">Costo Laboral sobre Facturación</p>
+              <span class="text-xs bg-red-500/20 text-red-300 px-2 py-1 rounded">Crítico</span>
+            </div>
+            <div class="px-6 py-4 flex justify-between items-center">
+              <p class="text-sm font-semibold">Punto de Equilibrio mensual</p>
+              <span class="text-xs bg-amber-500/20 text-amber-300 px-2 py-1 rounded">Alto impacto</span>
+            </div>
+            <div class="px-6 py-4 flex justify-between items-center">
+              <p class="text-sm font-semibold">Capital de Trabajo disponible</p>
+              <span class="text-xs bg-amber-500/20 text-amber-300 px-2 py-1 rounded">Alto impacto</span>
+            </div>
+          </div>
         </div>
-    </footer>
+      </div>
+    </div>
+  </div>
+</section>
 
-    <script>
-        const form = document.getElementById('contact-form');
-        const statusDiv = document.getElementById('form-status');
-        const submitBtn = document.getElementById('submit-btn');
+<!-- Canales de Comunicación -->
+<section id="contacto" class="py-16 md:py-24 bg-white px-6">
+  <div class="max-w-7xl mx-auto">
+    <div class="mb-12 md:mb-16">
+      <h2 class="text-3xl md:text-4xl font-bold text-brand-primary mb-4 italic">Canales de Comunicación</h2>
+      <p class="text-slate-500 uppercase tracking-widest text-xs md:text-sm">Información de contacto directo</p>
+      <div class="w-12 md:w-16 h-0.5 bg-brand-accent mt-4"></div>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12 text-center md:text-left">
+      <div class="p-8 border border-slate-100 rounded-sm">
+        <span class="contact-label">Dirección</span>
+        <p class="text-brand-primary font-semibold text-lg md:text-xl">Santa Fe N° 15</p>
+        <p class="text-slate-500 text-sm md:text-base">San Rafael, Mendoza</p>
+      </div>
+      <a href="https://wa.me/5492604849021?text=Hola%2C%20me%20comunico%20para%20solicitar%20una%20consulta%20con%20MR%20Consultora%20de%20Negocios" target="_blank" class="p-8 border border-slate-100 rounded-sm hover:border-brand-secondary transition-all group">
+        <span class="contact-label">Línea Directa</span>
+        <div class="flex items-center justify-center md:justify-start gap-2">
+          <svg class="w-6 h-6 text-emerald-500 fill-current" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766 0-3.18-2.587-5.771-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217s.231.001.332.005c.109.004.258-.041.404.308.159.386.542 1.32.588 1.412.046.092.076.198.015.311-.06.113-.091.193-.181.297-.09.104-.181.232-.259.311-.089.09-.181.188-.077.367.103.179.458.753.985 1.221.677.602 1.248.788 1.427.873.179.085.283.071.388-.051.105-.122.448-.523.568-.702.12-.179.24-.15.404-.091.164.059 1.04.49 1.217.579.178.089.297.132.34.207.044.075.044.433-.1.838zM12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0m0 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+          <p class="text-brand-primary font-semibold text-lg md:text-xl group-hover:text-brand-secondary transition-colors">2604849021</p>
+        </div>
+        <p class="text-slate-500 text-sm md:text-base">WhatsApp Directo</p>
+      </a>
+      <div class="p-8 border border-slate-100 rounded-sm">
+        <span class="contact-label">Email</span>
+        <p class="text-brand-primary font-semibold text-base md:text-lg">info@mrconsultora.net.ar</p>
+        <p class="text-slate-500 text-sm md:text-base mt-1">Respondemos en menos de 24hs</p>
+      </div>
+      <div class="p-8 border border-slate-100 rounded-sm">
+        <span class="contact-label">Presencia Digital</span>
+        <div class="flex justify-center md:justify-start gap-5 mt-4">
+          <a href="https://wa.me/5492604849021?text=Hola%2C%20me%20comunico%20para%20solicitar%20una%20consulta%20con%20MR%20Consultora%20de%20Negocios" target="_blank" class="text-brand-primary hover:text-emerald-500 transition-colors" title="WhatsApp">
+            <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766 0-3.18-2.587-5.771-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217s.231.001.332.005c.109.004.258-.041.404.308.159.386.542 1.32.588 1.412.046.092.076.198.015.311-.06.113-.091.193-.181.297-.09.104-.181.232-.259.311-.089.09-.181.188-.077.367.103.179.458.753.985 1.221.677.602 1.248.788 1.427.873.179.085.283.071.388-.051.105-.122.448-.523.568-.702.12-.179.24-.15.404-.091.164.059 1.04.49 1.217.579.178.089.297.132.34.207.044.075.044.433-.1.838z"/></svg>
+          </a>
+          <a href="https://www.linkedin.com/company/mr-consultoradenegocios" target="_blank" class="text-brand-primary hover:text-brand-secondary transition-colors" title="LinkedIn">
+            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+          </a>
+          <a href="https://www.instagram.com/mr.consultora.de.negocios/" target="_blank" class="text-brand-primary hover:text-brand-secondary transition-colors" title="Instagram">
+            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+          </a>
+          <a href="https://www.facebook.com/mrgestores/" target="_blank" class="text-brand-primary hover:text-brand-secondary transition-colors" title="Facebook">
+            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c5.05-.5 9-4.76 9-9.95z"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
-        form.onsubmit = async (e) => {
-            e.preventDefault();
-            
-            // Desactivar botón para evitar múltiples envíos
-            submitBtn.disabled = true;
-            submitBtn.innerText = "ENVIANDO REQUERIMIENTO...";
-            
-            const formData = new FormData(form);
-            
-            try {
-                const response = await fetch(form.action, {
-                    method: form.method,
-                    body: formData,
-                    headers: { 'Accept': 'application/json' }
-                });
+<!-- Formulario de Contacto -->
+<section id="consulta" class="py-16 md:py-24 bg-slate-50 border-t border-slate-200 px-6">
+  <div class="max-w-3xl mx-auto">
+    <div class="text-center mb-12 md:mb-16">
+      <h2 class="text-3xl md:text-5xl font-bold italic text-brand-primary uppercase tracking-tighter">Inicie un proceso de profesionalización con nosotros</h2>
+      <p class="text-slate-400 uppercase tracking-widest text-xs md:text-sm mt-4">Agende una sesión de diagnóstico estratégico con nuestros expertos</p>
+    </div>
+    <div class="bg-white p-6 md:p-16 shadow-sm border border-slate-100 rounded-sm overflow-hidden min-h-[400px]">
+      <form id="contact-form" action="https://formspree.io/f/xbddawkw" method="POST" class="space-y-8 md:space-y-12">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
+          <div class="border-b border-slate-200">
+            <label class="text-[9px] md:text-[10px] font-bold uppercase text-slate-400 tracking-widest mb-3 block">Nombre y Apellido</label>
+            <input type="text" name="nombre" required class="w-full py-3 md:py-4 outline-none focus:border-brand-secondary transition-all text-sm md:text-base" placeholder="Referente de la empresa">
+          </div>
+          <div class="border-b border-slate-200">
+            <label class="text-[9px] md:text-[10px] font-bold uppercase text-slate-400 tracking-widest mb-3 block">Contacto</label>
+            <input type="text" name="empresa" required class="w-full py-3 md:py-4 outline-none focus:border-brand-secondary transition-all text-sm md:text-base" placeholder="Correo electrónico / Celular">
+          </div>
+        </div>
+        <div class="border-b border-slate-200">
+          <label class="text-[9px] md:text-[10px] font-bold uppercase text-slate-400 tracking-widest mb-3 block">Área de Interés</label>
+          <select name="interes" class="w-full py-3 md:py-4 outline-none bg-transparent text-sm md:text-base">
+            <option value="diagnostico">Diagnóstico Técnico de Estructura (recomendado)</option>
+            <option value="pyme-rentable">Suscripción PyME Rentable</option>
+            <option value="emprendedor">Plan Emprendedor Organizado</option>
+            <option value="integral">Plan Consultoría Integral</option>
+            <option value="otros">Otros Servicios de Negocios</option>
+          </select>
+        </div>
+        <div class="border-b border-slate-200">
+          <label class="text-[9px] md:text-[10px] font-bold uppercase text-slate-400 tracking-widest mb-3 block">Breve descripción de su consulta</label>
+          <textarea name="mensaje" rows="4" required class="w-full py-3 md:py-4 outline-none focus:border-brand-secondary transition-all text-sm md:text-base" placeholder="¿Cómo podemos ayudarle a potenciar su empresa?"></textarea>
+        </div>
+        <button type="submit" id="submit-btn" class="w-full bg-brand-primary text-white py-5 md:py-6 font-bold uppercase tracking-widest text-[10px] md:text-sm hover:bg-brand-secondary transition-all shadow-md">Enviar consulta</button>
+      </form>
+      <div id="form-status" class="text-center py-10 md:py-16">
+        <div class="w-16 md:w-20 h-16 md:h-20 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-6 md:mb-8 text-2xl md:text-3xl font-bold">✓</div>
+        <h3 class="text-2xl md:text-3xl font-bold text-brand-primary mb-4 italic">¡Consulta Enviada!</h3>
+        <p class="text-slate-500 text-base md:text-lg max-w-md mx-auto">Hemos recibido su consulta correctamente. Un socio de la firma se pondrá en contacto con usted a la brevedad.</p>
+        <button onclick="resetForm()" class="mt-8 md:mt-10 text-brand-secondary font-bold text-xs md:text-sm uppercase tracking-widest hover:underline">Enviar otra consulta</button>
+      </div>
+    </div>
+  </div>
+</section>
 
-                if (response.ok) {
-                    // Ocultar formulario y MOSTRAR RESPUESTA (statusDiv)
-                    form.style.display = 'none';
-                    statusDiv.style.display = 'block';
-                    form.reset();
-                    
-                    // Hacer scroll automático al mensaje de éxito si es necesario
-                    statusDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                } else {
-                    const data = await response.json();
-                    alert("Error: " + (data.errors ? data.errors[0].message : "No se pudo enviar el mensaje."));
-                }
-            } catch (error) {
-                alert("Hubo un error de conexión. Por favor, verifique su internet o intente más tarde.");
-            } finally {
-                submitBtn.disabled = false;
-                submitBtn.innerText = "Enviar Requerimiento Estratégico";
-            }
-        };
+<!-- Footer -->
+<footer class="py-16 md:py-24 bg-brand-primary text-center">
+  <div class="max-w-7xl mx-auto px-6 text-white/60">
+    <div class="flex flex-col items-center gap-6 md:gap-8 mb-12 md:mb-16">
+      <img src="logofondotransp.png" alt="Logo de MR Consultora" class="header-logo brightness-0 invert opacity-80" onerror="this.style.display='none'">
+      <p class="text-[8px] md:text-xs uppercase tracking-[0.1em] md:tracking-[0.2em] text-brand-accent max-w-sm mx-auto px-4 italic">Solidez legal y Estrategia de crecimiento para PyMEs.</p>
+      <div class="flex gap-6">
+        <a href="https://www.linkedin.com/company/mr-consultoradenegocios" target="_blank" class="hover:text-brand-accent transition-colors">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+        </a>
+        <a href="https://www.instagram.com/mr.consultora.de.negocios/" target="_blank" class="hover:text-brand-accent transition-colors">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+        </a>
+        <a href="https://www.facebook.com/mrgestores/" target="_blank" class="hover:text-brand-accent transition-colors">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c5.05-.5 9-4.76 9-9.95z"/></svg>
+        </a>
+      </div>
+    </div>
+    <div class="text-[9px] md:text-xs text-white/40 space-y-2 md:space-y-3 mb-8 md:mb-10 uppercase tracking-widest px-4">
+      <p>Santa Fe N° 15, San Rafael, Mendoza</p>
+      <p>Tel: 2604849021 | info@mrconsultora.net.ar</p>
+    </div>
+    <p class="text-[8px] md:text-[10px] text-white/20 uppercase tracking-[0.2em] pt-8 md:pt-12 border-t border-white/5 px-4">&copy; 2026 MR CONSULTORA | Consultoría Estratégica Integral</p>
+  </div>
+</footer>
 
-        function resetForm() {
-            // Volver al estado inicial
-            statusDiv.style.display = 'none';
-            form.style.display = 'block';
-        }
-    </script>
+<!-- BOTÓN FLOTANTE WHATSAPP -->
+<a href="https://wa.me/5492604849021?text=Hola%2C%20quiero%20saber%20si%20mi%20empresa%20necesita%20un%20Diagn%C3%B3stico%20T%C3%A9cnico%20de%20Estructura" target="_blank" class="wa-float" title="Chateá con nosotros por WhatsApp">
+  <svg viewBox="0 0 24 24" width="30" height="30" fill="white"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766 0-3.18-2.587-5.771-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.005c.109.004.258-.041.404.308l.588 1.412c.046.092.076.198.015.311l-.181.297c-.09.104-.181.232-.259.311-.089.09-.181.188-.077.367.103.179.458.753.985 1.221.677.602 1.248.788 1.427.873.179.085.283.071.388-.051l.568-.702c.12-.179.24-.15.404-.091l1.217.579c.178.089.297.132.34.207.044.075.044.433-.1.838zM12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0m0 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+</a>
+
+<script>
+const form = document.getElementById('contact-form');
+const statusDiv = document.getElementById('form-status');
+const submitBtn = document.getElementById('submit-btn');
+
+form.onsubmit = async (e) => {
+  e.preventDefault();
+  submitBtn.disabled = true;
+  submitBtn.innerText = "ENVIANDO REQUERIMIENTO...";
+  const formData = new FormData(form);
+  try {
+    const response = await fetch(form.action, {
+      method: form.method,
+      body: formData,
+      headers: { 'Accept': 'application/json' }
+    });
+    if (response.ok) {
+      form.style.display = 'none';
+      statusDiv.style.display = 'block';
+      form.reset();
+      statusDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    } else {
+      const data = await response.json();
+      alert("Error: " + (data.errors ? data.errors[0].message : "No se pudo enviar el mensaje."));
+    }
+  } catch (error) {
+    alert("Hubo un error de conexión. Por favor, verifique su internet o intente más tarde.");
+  } finally {
+    submitBtn.disabled = false;
+    submitBtn.innerText = "Enviar consulta";
+  }
+};
+
+function resetForm() {
+  statusDiv.style.display = 'none';
+  form.style.display = 'block';
+}
+</script>
 </body>
-</html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
