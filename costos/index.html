@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Calculá los costos, el precio de venta y el punto de equilibrio de tu emprendimiento. Herramienta gratuita de MR Consultora de Negocios, San Rafael, Mendoza.">
+<meta name="color-scheme" content="light dark">
+<meta property="og:title" content="Calculadora de costos y punto de equilibrio">
+<meta property="og:description" content="Cargá tus costos y descubrí cuánto tenés que vender para no perder dinero.">
+<meta property="og:type" content="website">
+<style>html{-webkit-text-size-adjust:100%}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Calculadora de costos y punto de equilibrio | MR Consultora de Negocios</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap">
+<style>
+  :root{
+    --ink:#0F1C3F;
+    --ink-2:#3D4A6B;
+    --ink-3:#6B7793;
+    --line:#DDE3ED;
+    --line-2:#EBEFF6;
+    --surface:#FFFFFF;
+    --surface-2:#F8FAFC;
+    --ground:#F1F4F9;
+    --brand:#0F1C3F;
+    --accent:#3B82F6;
+    --accent-soft:#E8F0FE;
+    --gold:#F59E0B;
+    --gold-soft:#FEF3DC;
+    --good:#0F7B4F;
+    --good-soft:#E3F3EB;
+    --bad:#B3261E;
+    --bad-soft:#FBE9E7;
+    --serie-ing:#3B82F6;
+    --serie-cos:#F59E0B;
+    --grid:#E3E8F0;
+    --shadow:0 1px 2px rgba(15,28,63,.06), 0 8px 24px rgba(15,28,63,.06);
+    --radius:10px;
+    --sans:'Montserrat', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    --display:'Playfair Display', Georgia, 'Times New Roman', serif;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --ink:#EEF2F8;
+      --ink-2:#BCC6D8;
+      --ink-3:#8B97AE;
+      --line:#2B3448;
+      --line-2:#222B3C;
+      --surface:#161D2C;
+      --surface-2:#1B2333;
+      --ground:#10151F;
+      --brand:#0B1220;
+      --accent:#6BA5F8;
+      --accent-soft:#1D2940;
+      --gold:#D9A227;
+      --gold-soft:#2C2413;
+      --good:#4FBE8B;
+      --good-soft:#12291F;
+      --bad:#F08A80;
+      --bad-soft:#2C1917;
+      --serie-ing:#4B93F0;
+      --serie-cos:#BC8110;
+      --grid:#283245;
+      --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.28);
+    }
+  }
+  :root[data-theme="dark"]{
+    --ink:#EEF2F8;
+    --ink-2:#BCC6D8;
+    --ink-3:#8B97AE;
+    --line:#2B3448;
+    --line-2:#222B3C;
+    --surface:#161D2C;
+    --surface-2:#1B2333;
+    --ground:#10151F;
+    --brand:#0B1220;
+    --accent:#6BA5F8;
+    --accent-soft:#1D2940;
+    --gold:#D9A227;
+    --gold-soft:#2C2413;
+    --good:#4FBE8B;
+    --good-soft:#12291F;
+    --bad:#F08A80;
+    --bad-soft:#2C1917;
+    --serie-ing:#4B93F0;
+    --serie-cos:#BC8110;
+    --grid:#283245;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.28);
+  }
+
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:var(--ground); color:var(--ink);
+    font-family:var(--sans); font-size:15px; line-height:1.5;
+    -webkit-text-size-adjust:100%;
+  }
+  .wrap{max-width:1120px; margin:0 auto; padding-inline:16px; padding-block:0 40px}
+
+  /* ---------- header ---------- */
+  header.top{
+    background:var(--brand); color:#fff; padding-inline:16px;
+    padding-block:18px 20px; border-bottom:3px solid var(--gold);
+  }
+  header.top .inner{max-width:1088px; margin:0 auto; display:flex; align-items:center; gap:14px; flex-wrap:wrap}
+  .logo{height:34px; width:auto; display:block}
+  .wordmark{font-family:var(--display); font-size:18px; letter-spacing:.01em; color:#fff}
+  .wordmark span{color:var(--gold)}
+  header.top h1{
+    font-family:var(--display); font-weight:700; font-size:clamp(22px,4.6vw,30px);
+    margin:10px 0 2px; color:#fff; text-wrap:balance; line-height:1.15;
+  }
+  header.top p{margin:0; color:#C6D0E4; font-size:14px; max-width:60ch}
+  .htitle{flex:1 1 260px; min-width:0}
+
+  /* ---------- generic blocks ---------- */
+  .grid{display:grid; gap:18px; grid-template-columns:1fr; margin-top:18px}
+  @media (min-width:900px){ .grid{grid-template-columns:minmax(0,1fr) minmax(0,420px); align-items:start} }
+  .card{
+    background:var(--surface); border:1px solid var(--line); border-radius:var(--radius);
+    padding:16px; box-shadow:var(--shadow);
+  }
+  .card + .card{margin-top:14px}
+  .card h2{
+    font-size:12px; text-transform:uppercase; letter-spacing:.09em; font-weight:700;
+    color:var(--ink-3); margin:0 0 2px;
+  }
+  .card .hint{font-size:12.5px; color:var(--ink-3); margin:0 0 12px}
+  .stack{display:flex; flex-direction:column; gap:10px}
+
+  label{display:block; font-size:12.5px; font-weight:600; color:var(--ink-2); margin-bottom:5px}
+  input[type=text], select{
+    width:100%; font:inherit; font-size:15px; color:var(--ink); background:var(--surface-2);
+    border:1px solid var(--line); border-radius:8px; padding:9px 10px; font-variant-numeric:tabular-nums;
+  }
+  input[type=text]:focus-visible, select:focus-visible, button:focus-visible, a:focus-visible{
+    outline:2px solid var(--accent); outline-offset:2px;
+  }
+  .field-row{display:flex; gap:8px; align-items:flex-end}
+  .field-row > *{min-width:0}
+  .f-grow{flex:1 1 auto}
+  .f-amount{flex:0 0 130px}
+  .f-pct{flex:0 0 96px}
+
+  .rowline{display:flex; gap:8px; align-items:center}
+  .rowline input.concept{flex:1 1 auto}
+  .rowline input.amount{flex:0 0 122px; text-align:right}
+  .iconbtn{
+    flex:0 0 auto; width:32px; height:32px; border-radius:8px; border:1px solid var(--line);
+    background:var(--surface-2); color:var(--ink-3); font-size:17px; line-height:1; cursor:pointer;
+  }
+  .iconbtn:hover{color:var(--bad); border-color:var(--bad)}
+  .addbtn{
+    align-self:flex-start; background:none; border:1px dashed var(--line); color:var(--accent);
+    font:inherit; font-size:13px; font-weight:600; border-radius:8px; padding:7px 12px; cursor:pointer;
+  }
+  .addbtn:hover{border-color:var(--accent); background:var(--accent-soft)}
+  .subtotal{
+    display:flex; justify-content:space-between; align-items:baseline; gap:10px;
+    border-top:1px solid var(--line-2); margin-top:4px; padding-top:9px;
+    font-size:13px; color:var(--ink-3);
+  }
+  .subtotal b{font-size:16px; color:var(--ink); font-variant-numeric:tabular-nums}
+
+  /* ---------- templates ---------- */
+  .chips{display:flex; flex-wrap:wrap; gap:8px}
+  .chip{
+    font:inherit; font-size:13px; font-weight:600; cursor:pointer;
+    background:var(--surface-2); color:var(--ink-2); border:1px solid var(--line);
+    border-radius:999px; padding:7px 13px;
+  }
+  .chip:hover{border-color:var(--accent); color:var(--accent)}
+  .chip[aria-pressed="true"]{background:var(--brand); border-color:var(--brand); color:#fff}
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .chip[aria-pressed="true"]{background:var(--accent); border-color:var(--accent); color:#0B1220} }
+  :root[data-theme="dark"] .chip[aria-pressed="true"]{background:var(--accent); border-color:var(--accent); color:#0B1220}
+
+  .banner{
+    display:flex; gap:10px; align-items:flex-start; justify-content:space-between; flex-wrap:wrap;
+    background:var(--gold-soft); border:1px solid var(--gold); border-radius:var(--radius);
+    padding:11px 13px; margin-top:16px; font-size:13px; color:var(--ink-2);
+  }
+  .banner b{color:var(--ink)}
+  .linkbtn{
+    background:none; border:none; font:inherit; font-size:13px; font-weight:700;
+    color:var(--accent); cursor:pointer; padding:0; text-decoration:underline;
+  }
+
+  /* ---------- price mode ---------- */
+  .modes{display:flex; flex-wrap:wrap; gap:6px; margin-bottom:12px}
+  .modes label{
+    margin:0; font-size:12.5px; font-weight:600; border:1px solid var(--line); border-radius:8px;
+    padding:7px 11px; cursor:pointer; background:var(--surface-2); color:var(--ink-2);
+  }
+  .modes input{position:absolute; opacity:0; width:0; height:0}
+  .modes label:has(input:checked){border-color:var(--accent); background:var(--accent-soft); color:var(--accent)}
+  .modes label:has(input:focus-visible){outline:2px solid var(--accent); outline-offset:2px}
+
+  /* ---------- results ---------- */
+  .res{position:sticky; top:calc(env(safe-area-inset-top, 0px) + 12px)}
+  @media (max-width:899px){ .res{position:static} }
+  .hero{
+    background:var(--brand); color:#fff; border-radius:var(--radius); padding:16px 16px 14px;
+    display:grid; gap:14px; grid-template-columns:1fr 1fr;
+  }
+  .hero .k{font-size:11px; text-transform:uppercase; letter-spacing:.08em; color:#A9B6D0; margin:0 0 3px}
+  .hero .v{font-size:clamp(21px,5.2vw,26px); font-weight:700; font-variant-numeric:tabular-nums; line-height:1.1; margin:0}
+  .hero .u{font-size:12px; color:#A9B6D0; margin:3px 0 0}
+  .hero .pe .v{color:var(--gold)}
+
+  dl.vals{margin:14px 0 0; display:grid; gap:0}
+  dl.vals > div{
+    display:flex; justify-content:space-between; align-items:baseline; gap:12px;
+    padding:9px 0; border-bottom:1px solid var(--line-2);
+  }
+  dl.vals > div:last-child{border-bottom:none}
+  dl.vals dt{font-size:13px; color:var(--ink-2); margin:0}
+  dl.vals dt small{display:block; font-size:11.5px; color:var(--ink-3); font-weight:400}
+  dl.vals dd{margin:0; font-size:15px; font-weight:600; font-variant-numeric:tabular-nums; text-align:right; white-space:nowrap}
+  dd.pos{color:var(--good)} dd.neg{color:var(--bad)}
+
+  .alert{border-radius:8px; padding:10px 12px; font-size:13px; margin-top:12px; display:none}
+  .alert.on{display:block}
+  .alert.danger{background:var(--bad-soft); border:1px solid var(--bad); color:var(--ink)}
+  .alert.note{background:var(--accent-soft); border:1px solid var(--accent); color:var(--ink)}
+  .alert b{display:block; margin-bottom:2px}
+
+  /* ---------- chart ---------- */
+  .chartbox{margin-top:6px}
+  .legend{display:flex; flex-wrap:wrap; gap:14px; margin:0 0 8px; font-size:12.5px; color:var(--ink-2)}
+  .legend span{display:inline-flex; align-items:center; gap:6px}
+  .swatch{width:13px; height:3px; border-radius:2px; display:inline-block}
+  svg.chart{display:block; width:100%; height:auto; max-width:100%; touch-action:pan-y}
+  svg.chart text{paint-order:stroke; stroke:var(--surface); stroke-width:3px; stroke-linejoin:round}
+  .readout{
+    font-size:12.5px; color:var(--ink-2); margin-top:6px; min-height:18px;
+    font-variant-numeric:tabular-nums;
+  }
+  table.pts{width:100%; border-collapse:collapse; margin-top:10px; font-size:12.5px}
+  table.pts th, table.pts td{text-align:right; padding:6px 4px; border-bottom:1px solid var(--line-2); font-variant-numeric:tabular-nums}
+  table.pts th:first-child, table.pts td:first-child{text-align:left}
+  table.pts th{color:var(--ink-3); font-weight:600; font-size:11.5px; text-transform:uppercase; letter-spacing:.05em}
+
+  /* ---------- actions & footer ---------- */
+  .actions{display:flex; flex-wrap:wrap; gap:8px; margin-top:14px}
+  .btn{
+    font:inherit; font-size:13.5px; font-weight:600; cursor:pointer; border-radius:8px;
+    padding:10px 14px; border:1px solid var(--line); background:var(--surface-2); color:var(--ink);
+    text-decoration:none; display:inline-block;
+  }
+  .btn:hover{border-color:var(--accent); color:var(--accent)}
+  .btn.primary{background:var(--accent); border-color:var(--accent); color:#fff}
+  .btn.primary:hover{filter:brightness(.94); color:#fff}
+  .foot{
+    margin-top:22px; padding-top:16px; border-top:1px solid var(--line);
+    font-size:12.5px; color:var(--ink-3); display:flex; flex-wrap:wrap; gap:10px 22px; justify-content:space-between;
+  }
+  .foot a{color:var(--accent)}
+  .formula{
+    font-size:12.5px; color:var(--ink-3); background:var(--surface-2); border:1px solid var(--line-2);
+    border-radius:8px; padding:9px 11px; margin-top:10px;
+  }
+  .formula code{font-family:ui-monospace, SFMono-Regular, Menlo, monospace; font-size:12px; color:var(--ink-2)}
+  .print-only{display:none}
+
+  @media print{
+    :root{--ground:#fff; --surface:#fff; --surface-2:#fff}
+    body{background:#fff; font-size:11pt}
+    header.top{background:#fff; color:#000; border-bottom:2px solid #000; margin:0; padding:0 0 8px}
+    header.top h1, .wordmark{color:#000}
+    header.top p{color:#333}
+    .no-print, .addbtn, .iconbtn, .chips, .banner, .actions, .modes{display:none !important}
+    .print-only{display:block}
+    .grid{grid-template-columns:1fr; gap:10px}
+    .card{break-inside:avoid; box-shadow:none; border:1px solid #bbb}
+    .hero{background:#fff; color:#000; border:1px solid #000}
+    .hero .k, .hero .u{color:#333}
+    .hero .pe .v{color:#000}
+    .res{position:static}
+  }
+  @media (prefers-reduced-motion:no-preference){
+    .iconbtn, .chip, .btn{transition:border-color .15s ease, color .15s ease, background-color .15s ease}
+  }
+</style>
+</head>
+<body>
+
+
+<header class="top">
+  <div class="inner">
+    <img class="logo" id="brandLogo" src="../logofondotransp.png" alt="MR Consultora">
+    <div class="wordmark" id="brandWord" hidden>MR <span>Consultora</span></div>
+    <div class="htitle">
+      <h1>Calculadora de costos y punto de equilibrio</h1>
+      <p>Cargá tus costos y descubrí cuánto tenés que vender para no perder dinero.</p>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <div class="banner no-print" id="exampleBanner">
+    <div><b>Estás viendo un ejemplo.</b> Los números son de una producción artesanal de dulce, para que veas cómo funciona. Reemplazalos por los tuyos.</div>
+    <button class="linkbtn" id="clearAll" type="button">Vaciar y empezar de cero</button>
+  </div>
+
+  <div class="grid">
+
+    <!-- ================= INPUTS ================= -->
+    <div>
+
+      <section class="card no-print">
+        <h2>Punto de partida</h2>
+        <p class="hint">Elegí el tipo de actividad y te precargamos los renglones de costo más comunes. Podés agregar, borrar o renombrar cualquiera.</p>
+        <div class="chips" id="templates">
+          <button class="chip" type="button" data-tpl="alimentos" aria-pressed="true">Alimentos artesanales</button>
+          <button class="chip" type="button" data-tpl="agro" aria-pressed="false">Producción agroindustrial</button>
+          <button class="chip" type="button" data-tpl="servicios" aria-pressed="false">Servicios profesionales</button>
+          <button class="chip" type="button" data-tpl="comercio" aria-pressed="false">Comercio minorista</button>
+          <button class="chip" type="button" data-tpl="otro" aria-pressed="false">Otro tipo de negocio</button>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Tu producto</h2>
+        <p class="hint">Todo el cálculo se hace sobre una sola unidad de venta y un mes de actividad.</p>
+        <div class="field-row">
+          <div class="f-grow">
+            <label for="prodName">¿Qué vendés? (unidad de venta)</label>
+            <input type="text" id="prodName" value="Frasco de dulce de 500 g" autocomplete="off">
+          </div>
+        </div>
+        <div class="field-row" style="margin-top:10px">
+          <div class="f-grow">
+            <label for="qty">Unidades que pensás vender por mes</label>
+            <input type="text" id="qty" inputmode="decimal" value="300" autocomplete="off">
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Costos fijos del mes</h2>
+        <p class="hint">Aquellos que debés pagar de forma periódica, sin importar el nivel de producción o ventas.</p>
+        <div class="stack" id="fixedRows"></div>
+        <button class="addbtn" type="button" data-add="fixed">+ Agregar costo fijo</button>
+        <div class="subtotal"><span>Total de costos fijos por mes</span><b id="sumFixed">$ 0</b></div>
+      </section>
+
+      <section class="card">
+        <h2>Costos variables por unidad</h2>
+        <p class="hint">Los costos variables cambian según la cantidad que producís o vendés. Los costos variables unitarios te indican cuál es el costo variable de cada unidad producida.</p>
+        <div class="stack" id="varRows"></div>
+        <button class="addbtn" type="button" data-add="var">+ Agregar costo variable</button>
+        <div class="subtotal"><span>Costo variable de una unidad</span><b id="sumVar">$ 0</b></div>
+      </section>
+
+      <section class="card">
+        <h2>Impuestos y comisiones sobre la venta</h2>
+        <p class="hint">Todo lo que se lleva un porcentaje de cada venta: Ingresos Brutos, la comisión de la plataforma de cobro, la comisión del revendedor. Cargá cada uno por separado y la app los suma. El monotributo no va acá: es una cuota fija mensual y va en los costos fijos.</p>
+        <div class="stack" id="taxRows"></div>
+        <button class="addbtn" type="button" data-add="tax">+ Agregar porcentaje</button>
+        <div class="subtotal"><span>Se lleva de cada venta</span><b id="sumTax">0 %</b></div>
+      </section>
+
+      <section class="card">
+        <h2>Precio de venta</h2>
+        <p class="hint">Definí cómo querés llegar al precio.</p>
+        <div class="modes">
+          <label><input type="radio" name="pmode" value="margen" checked> Por margen sobre el precio</label>
+          <label><input type="radio" name="pmode" value="markup"> Por markup sobre el costo</label>
+          <label><input type="radio" name="pmode" value="fijo"> Lo fijo yo</label>
+        </div>
+        <div id="fieldMargen">
+          <label for="margenPct">Margen de ganancia que querés (% del precio de venta)</label>
+          <input type="text" id="margenPct" inputmode="decimal" value="35">
+        </div>
+        <div id="fieldMarkup" hidden>
+          <label for="markupPct">Markup que querés (% que le sumás al costo)</label>
+          <input type="text" id="markupPct" inputmode="decimal" value="55">
+        </div>
+        <div id="fieldFijo" hidden>
+          <label for="precioFijo">Precio de venta al público</label>
+          <input type="text" id="precioFijo" inputmode="decimal" value="5400">
+        </div>
+        <div class="formula" id="markupNote"></div>
+      </section>
+
+    </div>
+
+    <!-- ================= RESULTS ================= -->
+    <div class="res">
+      <section class="card">
+        <h2>Resultado</h2>
+        <p class="hint" id="resHint">Sobre <span id="resProd">tu producto</span>, valores del mes.</p>
+
+        <div class="hero">
+          <div>
+            <p class="k">Precio de venta</p>
+            <p class="v" id="outPrice">—</p>
+            <p class="u">por unidad</p>
+          </div>
+          <div class="pe">
+            <p class="k">Punto de equilibrio</p>
+            <p class="v" id="outPEu">—</p>
+            <p class="u" id="outPEuUnit">unidades por mes</p>
+          </div>
+        </div>
+
+        <div class="alert danger" id="alertNeg">
+          <b>Con este precio nunca cubrís los costos.</b>
+          Cada unidad que vendés deja menos de lo que cuesta producirla. Subí el precio o bajá el costo variable.
+        </div>
+        <div class="alert note" id="alertNoFixed">
+          <b>No cargaste costos fijos.</b>
+          Sin costos fijos el punto de equilibrio es cero y el concepto pierde sentido. Cargá lo que pagarías todos los meses aunque no vendas nada.
+        </div>
+
+        <dl class="vals">
+          <div><dt>Costo variable por unidad</dt><dd id="outCVu">—</dd></div>
+          <div><dt>Costo fijo por unidad <small>costos fijos ÷ unidades del mes</small></dt><dd id="outCFu">—</dd></div>
+          <div><dt>Costo unitario total</dt><dd id="outCU">—</dd></div>
+          <div><dt>Impuestos y comisiones por unidad</dt><dd id="outTax">—</dd></div>
+          <div><dt>Margen de contribución por unidad <small>lo que deja cada venta para pagar los costos fijos</small></dt><dd id="outMC">—</dd></div>
+          <div><dt>Punto de equilibrio en pesos</dt><dd id="outPEp">—</dd></div>
+          <div><dt>Margen de seguridad <small>cuánto pueden caer tus ventas antes de perder</small></dt><dd id="outMS">—</dd></div>
+          <div><dt>Resultado del mes <small>si vendés lo que proyectaste</small></dt><dd id="outProfit">—</dd></div>
+        </dl>
+      </section>
+
+      <section class="card">
+        <h2>Ingresos contra costos</h2>
+        <p class="hint">Donde las dos líneas se cruzan, no ganás ni perdés.</p>
+        <div class="legend">
+          <span><i class="swatch" style="background:var(--serie-ing)"></i> Ingresos netos</span>
+          <span><i class="swatch" style="background:var(--serie-cos)"></i> Costos totales</span>
+        </div>
+        <div class="chartbox">
+          <svg class="chart" id="chart" viewBox="0 0 440 260" role="img" aria-label="Gráfico de ingresos netos y costos totales según las unidades vendidas"></svg>
+          <p class="readout" id="readout">Pasá el dedo o el mouse sobre el gráfico para ver los valores.</p>
+        </div>
+        <table class="pts">
+          <thead><tr><th>Unidades vendidas</th><th>Ingresos netos</th><th>Costos totales</th><th>Resultado</th></tr></thead>
+          <tbody id="ptsBody"></tbody>
+        </table>
+      </section>
+
+      <section class="card no-print">
+        <h2>Para seguir</h2>
+        <div class="actions">
+          <button class="btn primary" type="button" id="btnPrint">Imprimir o guardar en PDF</button>
+          <button class="btn" type="button" id="btnCopy">Copiar el resumen</button>
+          <a class="btn" id="btnCuadernillo" href="#" target="_blank" rel="noopener" hidden>Cuadernillo de costos</a>
+        </div>
+        <p class="hint" style="margin:12px 0 0">Tus datos quedan guardados solo en este dispositivo. No viajan a ningún servidor y nadie más los ve.</p>
+      </section>
+    </div>
+
+  </div>
+
+  <div class="foot">
+    <span id="footDate">Valores al —</span>
+    <span>¿Querés que revisemos tus números con vos? <a href="https://mrconsultora.net.ar/" target="_blank" rel="noopener">MR Consultora de Negocios</a></span>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ---------- configuración editable ---------- */
+  var CUADERNILLO_URL = "https://drive.google.com/file/d/17IyWAkiOSM4MJ1ueN1Y_plYZJ_d-DtOZ/view?usp=sharing";
+
+  /* ---------- plantillas ---------- */
+  var TPL = {
+    alimentos: {
+      name: "Frasco de dulce de 500 g",
+      qty: "300",
+      fixed: [["Alquiler del espacio de elaboración","120000"],["Energía eléctrica y gas","45000"],["Amortización de equipos (lo que costaron ÷ los meses que van a durar)","25000"],["Monotributo, seguro y contador","15000"]],
+      vars:  [["Fruta","700"],["Azúcar y aditivos","450"],["Frasco y tapa","600"],["Etiqueta","120"],["Mano de obra por unidad","500"]],
+      tax:   [["Ingresos Brutos","3"],["Comisión de la plataforma de cobro","5"]]
+    },
+    agro: {
+      name: "Botella de vino de 750 cm³",
+      qty: "1200",
+      fixed: [["Mantenimiento de la sala de elaboración","180000"],["Energía eléctrica, gas y agua","90000"],["Amortización de equipos (lo que costaron ÷ los meses que van a durar)","140000"],["Análisis, habilitaciones y seguros","60000"]],
+      vars:  [["Uva o materia prima","900"],["Insumos de elaboración","260"],["Botella","1100"],["Corcho y cápsula","420"],["Etiqueta y contraetiqueta","230"],["Mano de obra por unidad","600"]],
+      tax:   [["Ingresos Brutos","3"],["Comisión del distribuidor","7"]]
+    },
+    servicios: {
+      name: "Hora de asesoramiento",
+      qty: "80",
+      fixed: [["Oficina o coworking","150000"],["Internet y telefonía","35000"],["Software y licencias","40000"],["Matrícula, monotributo, seguro y contador","55000"]],
+      vars:  [["Insumos y materiales del servicio","800"],["Movilidad","1200"],["Colaborador externo por hora","3000"]],
+      tax:   [["Ingresos Brutos","5"],["Comisión de la plataforma de cobro","7"]]
+    },
+    comercio: {
+      name: "Producto de reventa",
+      qty: "600",
+      fixed: [["Alquiler del local","250000"],["Sueldo del personal","420000"],["Energía eléctrica, gas, agua y expensas","80000"],["Monotributo, seguro, alarma y contador","60000"]],
+      vars:  [["Precio de compra del producto","4200"],["Flete y logística por unidad","250"],["Packaging","150"]],
+      tax:   [["Ingresos Brutos","3"],["Comisión de la plataforma de cobro","6"]]
+    },
+    otro: {
+      name: "",
+      qty: "",
+      fixed: [["",""],["",""],["",""],["",""]],
+      vars:  [["",""],["",""],["",""]],
+      tax:   [["",""],["",""]]
+    }
+  };
+
+  var $ = function(id){ return document.getElementById(id); };
+  var fixedRows = $("fixedRows"), varRows = $("varRows"), taxRows = $("taxRows");
+  var STORE_KEY = "mrc-costos-v1";
+  var touched = false;
+
+  /* ---------- números ---------- */
+  function parseNum(s){
+    if (typeof s !== "string") s = String(s == null ? "" : s);
+    s = s.replace(/[^\d.,-]/g, "").trim();
+    if (!s) return 0;
+    var hasDot = s.indexOf(".") > -1, hasComma = s.indexOf(",") > -1;
+    if (hasDot && hasComma){
+      s = s.lastIndexOf(",") > s.lastIndexOf(".") ? s.replace(/\./g,"").replace(",",".") : s.replace(/,/g,"");
+    } else if (hasComma){
+      s = s.replace(/\./g,"").replace(",",".");
+    } else if (hasDot){
+      var parts = s.split(".");
+      if (parts.length > 2 || (parts[1] && parts[1].length === 3 && parts[0].length <= 3 && parts[0] !== "0")) s = parts.join("");
+    }
+    var n = parseFloat(s);
+    return isFinite(n) ? n : 0;
+  }
+  var fmtMoney = new Intl.NumberFormat("es-AR", {style:"currency", currency:"ARS", maximumFractionDigits:0});
+  var fmtMoney2 = new Intl.NumberFormat("es-AR", {style:"currency", currency:"ARS", minimumFractionDigits:2, maximumFractionDigits:2});
+  var fmtInt = new Intl.NumberFormat("es-AR", {maximumFractionDigits:0});
+  function money(n){ if(!isFinite(n)) return "—"; return Math.abs(n) < 100 ? fmtMoney2.format(n) : fmtMoney.format(n); }
+  function pct(n){ return isFinite(n) ? fmtInt.format(Math.round(n)) + " %" : "—"; }
+  var fmtDec = new Intl.NumberFormat("es-AR", {maximumFractionDigits:2});
+  function pctD(n){ return isFinite(n) ? fmtDec.format(n) + " %" : "—"; }
+
+  /* ---------- filas dinámicas ---------- */
+  function makeRow(concept, amount, kind){
+    var wrap = document.createElement("div");
+    wrap.className = "rowline";
+    var uid = kind + "-" + Math.random().toString(36).slice(2,8);
+    var a = document.createElement("input");
+    a.type = "text"; a.className = "concept"; a.value = concept || "";
+    a.placeholder = kind === "fixed" ? "Concepto" : (kind === "tax" ? "Impuesto o comisión" : "Insumo o concepto");
+    a.id = uid + "-c"; a.setAttribute("aria-label","Concepto"); a.autocomplete = "off";
+    var b = document.createElement("input");
+    b.type = "text"; b.className = "amount"; b.value = amount || "";
+    b.inputMode = "decimal"; b.placeholder = kind === "tax" ? "%" : "0"; b.id = uid + "-a";
+    b.setAttribute("aria-label", kind === "tax" ? "Porcentaje sobre la venta" : "Importe en pesos");
+    b.autocomplete = "off";
+    var del = document.createElement("button");
+    del.type = "button"; del.className = "iconbtn"; del.innerHTML = "&times;";
+    del.title = "Quitar este renglón"; del.setAttribute("aria-label","Quitar " + (concept || "renglón"));
+    del.addEventListener("click", function(){ wrap.remove(); markTouched(); calc(); });
+    wrap.appendChild(a); wrap.appendChild(b); wrap.appendChild(del);
+    return wrap;
+  }
+  function fillRows(container, list, kind){
+    container.innerHTML = "";
+    for (var i=0; i<list.length; i++) container.appendChild(makeRow(list[i][0], list[i][1], kind));
+  }
+  function readRows(container){
+    var out = [], rows = container.querySelectorAll(".rowline");
+    for (var i=0; i<rows.length; i++){
+      out.push([rows[i].querySelector(".concept").value, rows[i].querySelector(".amount").value]);
+    }
+    return out;
+  }
+  function sumRows(container){
+    var t = 0, rows = container.querySelectorAll(".amount");
+    for (var i=0; i<rows.length; i++) t += parseNum(rows[i].value);
+    return t;
+  }
+
+  /* ---------- plantilla ---------- */
+  function applyTemplate(key, silent){
+    var t = TPL[key]; if (!t) return;
+    $("prodName").value = t.name;
+    $("qty").value = t.qty;
+    fillRows(fixedRows, t.fixed, "fixed");
+    fillRows(varRows, t.vars, "var");
+    fillRows(taxRows, t.tax, "tax");
+    var chips = document.querySelectorAll("#templates .chip");
+    for (var i=0; i<chips.length; i++) chips[i].setAttribute("aria-pressed", chips[i].dataset.tpl === key ? "true" : "false");
+    if (!silent) { markTouched(); }
+    calc();
+  }
+  document.getElementById("templates").addEventListener("click", function(e){
+    var b = e.target.closest(".chip"); if (!b) return;
+    applyTemplate(b.dataset.tpl);
+  });
+
+  $("clearAll").addEventListener("click", function(){
+    $("prodName").value = ""; $("qty").value = "";
+    fillRows(fixedRows, [["",""],["",""],["",""]], "fixed");
+    fillRows(varRows, [["",""],["",""],["",""]], "var");
+    fillRows(taxRows, [["",""],["",""]], "tax");
+    var chips = document.querySelectorAll("#templates .chip");
+    for (var i=0; i<chips.length; i++) chips[i].setAttribute("aria-pressed","false");
+    markTouched(); calc();
+    $("prodName").focus();
+  });
+
+  document.addEventListener("click", function(e){
+    var b = e.target.closest("[data-add]"); if (!b) return;
+    var c = b.dataset.add === "fixed" ? fixedRows : (b.dataset.add === "tax" ? taxRows : varRows);
+    var row = makeRow("", "", b.dataset.add);
+    c.appendChild(row);
+    row.querySelector(".concept").focus();
+    markTouched();
+  });
+
+  /* ---------- modo de precio ---------- */
+  var modeRadios = document.querySelectorAll('input[name="pmode"]');
+  function currentMode(){
+    for (var i=0; i<modeRadios.length; i++) if (modeRadios[i].checked) return modeRadios[i].value;
+    return "margen";
+  }
+  for (var i=0; i<modeRadios.length; i++){
+    modeRadios[i].addEventListener("change", function(){
+      var m = currentMode();
+      $("fieldMargen").hidden = m !== "margen";
+      $("fieldMarkup").hidden = m !== "markup";
+      $("fieldFijo").hidden   = m !== "fijo";
+      markTouched(); calc();
+    });
+  }
+
+  /* ---------- guardado local ---------- */
+  function markTouched(){
+    if (!touched){ touched = true; var b = $("exampleBanner"); if (b) b.hidden = true; }
+    save();
+  }
+  function save(){
+    try{
+      localStorage.setItem(STORE_KEY, JSON.stringify({
+        name: $("prodName").value, qty: $("qty").value,
+        mode: currentMode(), margen: $("margenPct").value, markup: $("markupPct").value, fijo: $("precioFijo").value,
+        fixed: readRows(fixedRows), vars: readRows(varRows), tax: readRows(taxRows), touched: true
+      }));
+    }catch(e){}
+  }
+  function load(){
+    var raw = null;
+    try{ raw = localStorage.getItem(STORE_KEY); }catch(e){ raw = null; }
+    if (!raw) return false;
+    try{
+      var d = JSON.parse(raw);
+      if (!d || !d.fixed) return false;
+      $("prodName").value = d.name || ""; $("qty").value = d.qty || "";
+      $("margenPct").value = d.margen || "35"; $("markupPct").value = d.markup || "55"; $("precioFijo").value = d.fijo || "";
+      fillRows(fixedRows, d.fixed, "fixed"); fillRows(varRows, d.vars || [], "var");
+      fillRows(taxRows, (d.tax && d.tax.length && typeof d.tax[0] !== "string") ? d.tax : [["",""]], "tax");
+      for (var i=0; i<modeRadios.length; i++) modeRadios[i].checked = (modeRadios[i].value === (d.mode || "margen"));
+      var m = d.mode || "margen";
+      $("fieldMargen").hidden = m !== "margen"; $("fieldMarkup").hidden = m !== "markup"; $("fieldFijo").hidden = m !== "fijo";
+      touched = true;
+      var b = $("exampleBanner"); if (b) b.hidden = true;
+      var chips = document.querySelectorAll("#templates .chip");
+      for (var j=0; j<chips.length; j++) chips[j].setAttribute("aria-pressed","false");
+      return true;
+    }catch(e){ return false; }
+  }
+
+  /* ---------- cálculo ---------- */
+  var M = {};
+  function calc(){
+    var CF = sumRows(fixedRows);
+    var CVu = sumRows(varRows);
+    var Q = parseNum($("qty").value);
+    var taxSum = Math.min(Math.max(sumRows(taxRows), 0), 95);
+    var t = taxSum / 100;
+    var CFu = Q > 0 ? CF / Q : 0;
+    var CU = CVu + CFu;
+
+    var mode = currentMode(), P = 0, preTax = 0, marginNote = "";
+    if (mode === "margen"){
+      var m = Math.min(Math.max(parseNum($("margenPct").value), 0), 95) / 100;
+      preTax = (1 - m) > 0 ? CU / (1 - m) : 0;
+      P = (1 - t) > 0 ? preTax / (1 - t) : 0;
+      var eqMarkup = CU > 0 ? (preTax - CU) / CU * 100 : 0;
+      marginNote = "Un margen de " + pct(m*100) + " sobre el precio equivale a un markup de <b>" + pct(eqMarkup) +
+                   "</b> sobre el costo. No son lo mismo: el margen se calcula sobre el precio de venta y el markup sobre el costo.";
+    } else if (mode === "markup"){
+      var k = Math.max(parseNum($("markupPct").value), 0) / 100;
+      preTax = CU * (1 + k);
+      P = (1 - t) > 0 ? preTax / (1 - t) : 0;
+      var eqMargen = preTax > 0 ? (preTax - CU) / preTax * 100 : 0;
+      marginNote = "Un markup de " + pct(k*100) + " sobre el costo equivale a un margen de <b>" + pct(eqMargen) +
+                   "</b> sobre el precio de venta. Confundirlos es el error más común al fijar precios.";
+    } else {
+      P = parseNum($("precioFijo").value);
+      preTax = P * (1 - t);
+      var realMargen = P > 0 ? (preTax - CU) / preTax * 100 : 0;
+      marginNote = "Con este precio, tu margen real sobre la venta es de <b>" + pct(realMargen) +
+                   "</b>, ya descontados impuestos y comisiones.";
+    }
+
+    var taxU = P * t;
+    var MCu = P * (1 - t) - CVu;          // margen de contribución por unidad
+    var PEu = MCu > 0 ? CF / MCu : Infinity;
+    var PEp = isFinite(PEu) ? PEu * P : Infinity;
+    var MS = (Q > 0 && isFinite(PEu)) ? (Q - PEu) / Q * 100 : NaN;
+    var profit = Q * MCu - CF;
+
+    M = {CF:CF, CVu:CVu, Q:Q, t:t, CFu:CFu, CU:CU, P:P, taxU:taxU, MCu:MCu, PEu:PEu, PEp:PEp, MS:MS, profit:profit};
+
+    $("sumFixed").textContent = money(CF);
+    $("sumVar").textContent = money(CVu);
+    $("sumTax").textContent = pctD(taxSum);
+    $("markupNote").innerHTML = marginNote;
+
+    $("outPrice").textContent = P > 0 ? money(P) : "—";
+    $("outPEu").textContent = MCu > 0 ? fmtInt.format(Math.ceil(PEu)) : "—";
+    $("outPEuUnit").textContent = MCu > 0 ? "unidades por mes" : "no se alcanza";
+    $("outCVu").textContent = money(CVu);
+    $("outCFu").textContent = Q > 0 ? money(CFu) : "—";
+    $("outCU").textContent = Q > 0 ? money(CU) : "—";
+    $("outTax").textContent = money(taxU);
+    $("outMC").textContent = money(MCu);
+    $("outMC").className = MCu > 0 ? "pos" : "neg";
+    $("outPEp").textContent = isFinite(PEp) ? money(PEp) : "—";
+    $("outMS").textContent = isFinite(MS) ? pct(MS) : "—";
+    $("outMS").className = (isFinite(MS) && MS > 0) ? "pos" : "neg";
+    $("outProfit").textContent = money(profit);
+    $("outProfit").className = profit >= 0 ? "pos" : "neg";
+    $("resProd").textContent = $("prodName").value.trim() || "tu producto";
+
+    $("alertNeg").className = "alert danger" + (P > 0 && MCu <= 0 ? " on" : "");
+    $("alertNoFixed").className = "alert note" + (CF <= 0 && P > 0 ? " on" : "");
+
+    drawChart();
+    fillPoints();
+  }
+
+  /* ---------- gráfico ---------- */
+  var SVG = "http://www.w3.org/2000/svg";
+  var CH = {x0:52, x1:424, y0:20, y1:214, xmax:1, ymax:1};
+
+  function el(tag, attrs){
+    var n = document.createElementNS(SVG, tag);
+    for (var k in attrs) if (Object.prototype.hasOwnProperty.call(attrs,k)) n.setAttribute(k, attrs[k]);
+    return n;
+  }
+  function niceStep(v){
+    if (!(v > 0)) return 1;
+    var e = Math.pow(10, Math.floor(Math.log10(v))), f = v / e;
+    var m = f <= 1 ? 1 : f <= 2 ? 2 : f <= 2.5 ? 2.5 : f <= 5 ? 5 : 10;
+    return m * e;
+  }
+  function niceMax(v){ return 4 * niceStep(v / 4); }
+
+  function shortMoney(v){
+    var a = Math.abs(v);
+    if (a >= 1000000) return "$" + (v/1000000).toFixed(a >= 10000000 ? 0 : 1).replace(".",",") + "M";
+    if (a >= 1000) return "$" + Math.round(v/1000) + "k";
+    return "$" + Math.round(v);
+  }
+
+  function drawChart(){
+    var svg = $("chart");
+    while (svg.firstChild) svg.removeChild(svg.firstChild);
+
+    var CF = M.CF, CVu = M.CVu, P = M.P, t = M.t, Q = M.Q, PEu = M.PEu;
+    var net = P * (1 - t);
+    var ref = [];
+    if (isFinite(PEu) && PEu > 0) ref.push(PEu);
+    if (Q > 0) ref.push(Q);
+    var xmax = ref.length ? Math.max.apply(null, ref) * 1.35 : 100;
+    if (!isFinite(xmax) || xmax <= 0) xmax = 100;
+    xmax = niceMax(xmax);
+    var ymax = niceMax(Math.max(CF + CVu * xmax, net * xmax, 1) * 1.04);
+    CH.xmax = xmax; CH.ymax = ymax;
+
+    var X = function(u){ return CH.x0 + (u / xmax) * (CH.x1 - CH.x0); };
+    var Y = function(v){ return CH.y1 - (v / ymax) * (CH.y1 - CH.y0); };
+
+    // grilla + eje y
+    for (var i=0; i<=4; i++){
+      var v = ymax * i / 4, y = Y(v);
+      svg.appendChild(el("line", {x1:CH.x0, y1:y, x2:CH.x1, y2:y, stroke:"var(--grid)", "stroke-width":1}));
+      var lb = el("text", {x:CH.x0-8, y:y+4, "text-anchor":"end", fill:"var(--ink-3)", "font-size":10.5, "font-family":"inherit"});
+      lb.textContent = shortMoney(v);
+      svg.appendChild(lb);
+    }
+    // eje x
+    svg.appendChild(el("line", {x1:CH.x0, y1:CH.y1, x2:CH.x1, y2:CH.y1, stroke:"var(--line)", "stroke-width":1.5}));
+    for (var j=0; j<=4; j++){
+      var u = xmax * j / 4, x = X(u);
+      var xl = el("text", {x:x, y:CH.y1+16, "text-anchor":"middle", fill:"var(--ink-3)", "font-size":10.5, "font-family":"inherit"});
+      xl.textContent = fmtInt.format(Math.round(u));
+      svg.appendChild(xl);
+    }
+    var ax = el("text", {x:(CH.x0+CH.x1)/2, y:CH.y1+34, "text-anchor":"middle", fill:"var(--ink-3)", "font-size":10.5, "font-family":"inherit"});
+    ax.textContent = "unidades vendidas por mes";
+    svg.appendChild(ax);
+
+    if (!(P > 0)) return;
+
+    // costos totales
+    svg.appendChild(el("line", {x1:X(0), y1:Y(CF), x2:X(xmax), y2:Y(CF + CVu*xmax),
+      stroke:"var(--serie-cos)", "stroke-width":2, "stroke-linecap":"round", fill:"none"}));
+    // ingresos netos
+    svg.appendChild(el("line", {x1:X(0), y1:Y(0), x2:X(xmax), y2:Y(net*xmax),
+      stroke:"var(--serie-ing)", "stroke-width":2, "stroke-linecap":"round", fill:"none"}));
+
+    // etiquetas directas al final de cada línea
+    var yIng = Y(net*xmax), yCos = Y(CF + CVu*xmax);
+    if (Math.abs(yIng - yCos) < 12) { yIng -= 6; yCos += 6; }
+    var li = el("text", {x:CH.x1-2, y:Math.max(yIng-9, CH.y0+9), "text-anchor":"end", fill:"var(--serie-ing)", "font-size":10.5, "font-weight":600, "font-family":"inherit"});
+    li.textContent = "Ingresos";
+    svg.appendChild(li);
+    var lc = el("text", {x:CH.x1-2, y:Math.max(yCos+16, CH.y0+12), "text-anchor":"end", fill:"var(--serie-cos)", "font-size":10.5, "font-weight":600, "font-family":"inherit"});
+    lc.textContent = "Costos";
+    svg.appendChild(lc);
+
+    // punto de equilibrio
+    if (isFinite(PEu) && PEu > 0 && PEu <= xmax){
+      var px = X(PEu), py = Y(net*PEu);
+      svg.appendChild(el("line", {x1:px, y1:py, x2:px, y2:CH.y1, stroke:"var(--ink-3)", "stroke-width":1, "stroke-dasharray":"3 3"}));
+      svg.appendChild(el("circle", {cx:px, cy:py, r:6, fill:"var(--surface)", stroke:"var(--ink)", "stroke-width":2}));
+      var anchor = px > CH.x1 - 110 ? "end" : "start";
+      var tx = px + (anchor === "end" ? -10 : 10);
+      var pe1 = el("text", {x:tx, y:py-12, "text-anchor":anchor, fill:"var(--ink)", "font-size":11, "font-weight":700, "font-family":"inherit"});
+      pe1.textContent = "Equilibrio: " + fmtInt.format(Math.ceil(PEu)) + " u.";
+      svg.appendChild(pe1);
+    }
+    // ventas proyectadas
+    if (Q > 0 && Q <= xmax){
+      var qx = X(Q);
+      svg.appendChild(el("line", {x1:qx, y1:CH.y0, x2:qx, y2:CH.y1, stroke:"var(--accent)", "stroke-width":1, "stroke-dasharray":"2 4", opacity:.75}));
+      var ql = el("text", {x:qx, y:CH.y0-6, "text-anchor":(qx > CH.x1-60 ? "end" : "middle"), fill:"var(--ink-3)", "font-size":10, "font-family":"inherit"});
+      ql.textContent = "tus ventas";
+      svg.appendChild(ql);
+    }
+
+    // capa de lectura
+    var guide = el("line", {id:"guide", x1:0, y1:CH.y0, x2:0, y2:CH.y1, stroke:"var(--ink-3)", "stroke-width":1, opacity:0});
+    svg.appendChild(guide);
+    var hit = el("rect", {x:CH.x0, y:CH.y0, width:(CH.x1-CH.x0), height:(CH.y1-CH.y0), fill:"transparent", style:"cursor:crosshair"});
+    svg.appendChild(hit);
+  }
+
+  function chartRead(clientX){
+    var svg = $("chart"), guide = svg.querySelector("#guide");
+    if (!guide || !(M.P > 0)) return;
+    var r = svg.getBoundingClientRect();
+    var vx = (clientX - r.left) / r.width * 440;
+    vx = Math.max(CH.x0, Math.min(CH.x1, vx));
+    var u = (vx - CH.x0) / (CH.x1 - CH.x0) * CH.xmax;
+    guide.setAttribute("x1", vx); guide.setAttribute("x2", vx); guide.setAttribute("opacity", .6);
+    var ing = M.P * (1 - M.t) * u, cos = M.CF + M.CVu * u, res = ing - cos;
+    $("readout").innerHTML = fmtInt.format(Math.round(u)) + " unidades → ingresos " + money(ing) +
+      " · costos " + money(cos) + " · <b style='color:" + (res>=0 ? "var(--good)" : "var(--bad)") + "'>" +
+      (res >= 0 ? "ganancia " : "pérdida ") + money(Math.abs(res)) + "</b>";
+  }
+  $("chart").addEventListener("mousemove", function(e){ chartRead(e.clientX); });
+  $("chart").addEventListener("touchmove", function(e){ if (e.touches[0]) chartRead(e.touches[0].clientX); }, {passive:true});
+  $("chart").addEventListener("mouseleave", function(){
+    var g = $("chart").querySelector("#guide"); if (g) g.setAttribute("opacity", 0);
+    $("readout").textContent = "Pasá el dedo o el mouse sobre el gráfico para ver los valores.";
+  });
+
+  function fillPoints(){
+    var body = $("ptsBody"); body.innerHTML = "";
+    if (!(M.P > 0)) return;
+    var rows = [["Sin ventas", 0]];
+    if (isFinite(M.PEu) && M.PEu > 0) rows.push(["Punto de equilibrio", Math.ceil(M.PEu)]);
+    if (M.Q > 0) rows.push(["Tus ventas proyectadas", M.Q]);
+    for (var i=0; i<rows.length; i++){
+      var u = rows[i][1], ing = M.P*(1-M.t)*u, cos = M.CF + M.CVu*u, res = ing - cos;
+      var tr = document.createElement("tr");
+      tr.innerHTML = "<td>" + rows[i][0] + " (" + fmtInt.format(u) + ")</td><td>" + money(ing) +
+        "</td><td>" + money(cos) + "</td><td style='color:" + (res>=0?"var(--good)":"var(--bad)") + "'>" + money(res) + "</td>";
+      body.appendChild(tr);
+    }
+  }
+
+  /* ---------- acciones ---------- */
+  $("btnPrint").addEventListener("click", function(){ window.print(); });
+  $("btnCopy").addEventListener("click", function(){
+    var prod = $("prodName").value.trim() || "Producto";
+    var txt = [
+      "COSTOS Y PUNTO DE EQUILIBRIO — " + prod,
+      "Valores al " + new Date().toLocaleDateString("es-AR"),
+      "",
+      "Costos fijos del mes: " + money(M.CF),
+      "Costo variable por unidad: " + money(M.CVu),
+      "Costo unitario total: " + money(M.CU),
+      "Impuestos y comisiones: " + pctD(M.t*100),
+      "Precio de venta: " + money(M.P),
+      "Margen de contribución por unidad: " + money(M.MCu),
+      "Punto de equilibrio: " + (isFinite(M.PEu) ? fmtInt.format(Math.ceil(M.PEu)) + " unidades (" + money(M.PEp) + ")" : "no se alcanza"),
+      "Ventas proyectadas: " + fmtInt.format(M.Q) + " unidades",
+      "Resultado del mes: " + money(M.profit),
+      "",
+      "Calculado en mrconsultora.net.ar/costos"
+    ].join("\n");
+    var done = function(){
+      var b = $("btnCopy"), old = b.textContent;
+      b.textContent = "Copiado"; setTimeout(function(){ b.textContent = old; }, 1600);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(txt).then(done, function(){ fallbackCopy(txt, done); });
+    } else fallbackCopy(txt, done);
+  });
+  function fallbackCopy(txt, done){
+    var ta = document.createElement("textarea");
+    ta.value = txt; ta.style.position = "fixed"; ta.style.opacity = "0";
+    document.body.appendChild(ta); ta.select();
+    try{ document.execCommand("copy"); done(); }catch(e){}
+    document.body.removeChild(ta);
+  }
+
+  /* ---------- arranque ---------- */
+  var logoEl = $("brandLogo");
+  function logoFailed(){ logoEl.hidden = true; $("brandWord").hidden = false; }
+  logoEl.addEventListener("error", logoFailed);
+  if (logoEl.complete && logoEl.naturalWidth === 0) logoFailed();
+  if (CUADERNILLO_URL){
+    var cb = $("btnCuadernillo"); cb.href = CUADERNILLO_URL; cb.hidden = false;
+  }
+  $("footDate").textContent = "Valores al " + new Date().toLocaleDateString("es-AR", {day:"numeric", month:"long", year:"numeric"});
+
+  document.addEventListener("input", function(e){
+    if (e.target.closest("input")) { markTouched(); calc(); }
+  });
+
+  if (!load()) applyTemplate("alimentos", true);
+  calc();
+})();
+</script>
+
+</body>
+</html>
