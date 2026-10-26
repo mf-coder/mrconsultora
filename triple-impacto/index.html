@@ -1,0 +1,657 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+</head>
+<body>
+<title>Calculadora de Triple Impacto</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: cuaderno de trabajo por pasos; barra de pasos arriba, panel de carga a la izquierda y resultados vivos a la derecha (apila en celular) */
+:root{
+  --bg:#f5f8f2; --surface:#ffffff; --ink:#18301c; --muted:#56705a; --line:#d5e2cf;
+  --accent:#2e7d32; --accent-strong:#1b5e20; --accent-soft:#e3f1dc; --lime:#9ccc65;
+  --good:#2e7d32; --warn:#a15c00; --warn-soft:#fff3dc; --bad:#b3261e; --bad-soft:#fde8e6;
+  --font-display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --font-body:"Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --font-mono:"JetBrains Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#0f1a11; --surface:#162419; --ink:#e3efdf; --muted:#9db69f; --line:#2b4230;
+  --accent:#7cc47f; --accent-strong:#a5d6a7; --accent-soft:#1f3423; --lime:#9ccc65;
+  --good:#7cc47f; --warn:#f0b357; --warn-soft:#3a2c12; --bad:#ff8a80; --bad-soft:#3d1a18; color-scheme:dark }}
+:root[data-theme="dark"]{
+  --bg:#0f1a11; --surface:#162419; --ink:#e3efdf; --muted:#9db69f; --line:#2b4230;
+  --accent:#7cc47f; --accent-strong:#a5d6a7; --accent-soft:#1f3423; --lime:#9ccc65;
+  --good:#7cc47f; --warn:#f0b357; --warn-soft:#3a2c12; --bad:#ff8a80; --bad-soft:#3d1a18; color-scheme:dark }
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--ink);font-family:var(--font-body);font-size:16px;line-height:1.5;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));padding-block:20px 48px}
+.wrap{max-width:1180px;margin:0 auto;display:flex;flex-direction:column;gap:18px}
+header.top{display:flex;flex-wrap:wrap;gap:12px 24px;align-items:flex-end;justify-content:space-between}
+.eyebrow{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0}
+h1{font-family:var(--font-display);font-weight:800;font-size:clamp(26px,4vw,38px);line-height:1.1;margin:4px 0 0;color:var(--accent-strong);text-wrap:balance}
+h2{font-family:var(--font-display);font-weight:700;font-size:22px;margin:0;color:var(--accent-strong);text-wrap:balance}
+h3{font-family:var(--font-display);font-weight:700;font-size:17px;margin:0}
+p{margin:0}
+.layers{display:flex;gap:6px;align-items:center;color:var(--muted);font-size:13px}
+.layers span{display:inline-block;width:34px;height:10px;border-radius:3px}
+nav.steps{display:flex;flex-wrap:wrap;gap:6px;border-bottom:2px solid var(--line);padding-bottom:8px}
+nav.steps button{font:inherit;font-size:15px;border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:8px 14px;border-radius:999px;cursor:pointer;display:flex;gap:8px;align-items:center}
+nav.steps button .n{font-family:var(--font-mono);font-size:12px;color:var(--muted)}
+nav.steps button[aria-selected="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+nav.steps button[aria-selected="true"] .n{color:#e8f5e9}
+:root[data-theme="dark"] nav.steps button[aria-selected="true"]{color:#0f1a11}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) nav.steps button[aria-selected="true"]{color:#0f1a11} }
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid var(--lime);outline-offset:2px}
+.banner{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;justify-content:space-between;background:var(--warn-soft);border:1px solid var(--warn);border-radius:10px;padding:10px 14px;font-size:15px}
+.grid{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:18px;align-items:start}
+@media (max-width:860px){.grid{grid-template-columns:minmax(0,1fr)}}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.hint{color:var(--muted);font-size:14px}
+.fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+label.f{display:flex;flex-direction:column;gap:4px;font-size:14px;font-weight:700}
+label.f small{font-weight:400;color:var(--muted)}
+input[type=text],input[type=number],select,textarea{font:inherit;font-size:15px;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px 10px;width:100%;min-width:0}
+textarea{min-height:64px;resize:vertical}
+.toggle{display:flex;gap:10px;align-items:flex-start;font-size:15px}
+.toggle input{margin-top:4px;width:18px;height:18px;accent-color:var(--accent)}
+fieldset{border:1px dashed var(--line);border-radius:10px;padding:12px;margin:0;display:flex;flex-direction:column;gap:12px}
+legend{font-weight:700;padding:0 6px}
+.btn{font:inherit;font-size:15px;border-radius:8px;padding:8px 14px;cursor:pointer;border:1px solid var(--accent);background:var(--accent);color:#fff}
+:root[data-theme="dark"] .btn{color:#0f1a11}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .btn{color:#0f1a11} }
+.btn.ghost{background:transparent;color:var(--accent-strong)}
+.btn.small{font-size:13px;padding:5px 10px}
+.btn.danger{border-color:var(--bad);background:transparent;color:var(--bad)}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.metric{border:1px solid var(--line);border-left:6px solid var(--accent);border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:6px;background:var(--surface)}
+.metric.warn{border-left-color:var(--warn)} .metric.bad{border-left-color:var(--bad)} .metric.off{border-left-color:var(--line);opacity:.75}
+.metric .top{display:flex;flex-wrap:wrap;justify-content:space-between;gap:6px 12px;align-items:baseline}
+.metric .val{font-family:var(--font-display);font-weight:800;font-size:24px;color:var(--accent-strong);font-variant-numeric:tabular-nums}
+.metric.bad .val{color:var(--bad)} .metric.warn .val{color:var(--warn)}
+.formula{font-family:var(--font-mono);font-size:13px;background:var(--accent-soft);border-radius:6px;padding:6px 8px;overflow-x:auto;white-space:pre-wrap;word-break:break-word}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-size:12px;border-radius:999px;padding:2px 9px;border:1px solid var(--line);color:var(--muted)}
+.chip.neg{border-color:var(--bad);color:var(--bad)} .chip.pos{border-color:var(--good);color:var(--good)}
+.alert{font-size:14px;border-radius:8px;padding:6px 10px;background:var(--warn-soft);color:var(--ink)}
+.alert.bad{background:var(--bad-soft)}
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:10px}
+table{border-collapse:collapse;width:100%;font-size:14px;background:var(--surface)}
+th,td{border:1px solid var(--line);padding:7px 9px;text-align:left;vertical-align:top}
+th{background:var(--accent-soft);font-weight:700}
+td.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.act{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr) auto;gap:8px;align-items:end;border-bottom:1px solid var(--line);padding-bottom:10px}
+.act .wide{grid-column:1 / -1}
+@media (max-width:560px){.act{grid-template-columns:minmax(0,1fr)}}
+.check{display:flex;gap:8px;align-items:flex-start;font-size:15px}
+.check .ic{font-weight:700;width:20px;flex:none}
+.check.ok .ic{color:var(--good)} .check.no .ic{color:var(--bad)}
+.selcard{border:1px solid var(--line);border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:10px}
+.selcard.on{border-color:var(--accent);background:var(--accent-soft)}
+.prompt{font-family:var(--font-mono);font-size:13px;white-space:pre-wrap;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:14px;max-height:520px;overflow:auto}
+footer{color:var(--muted);font-size:13px;border-top:1px solid var(--line);padding-top:12px}
+.confirm{display:flex;flex-wrap:wrap;gap:8px;align-items:center;background:var(--bad-soft);border-radius:8px;padding:8px 10px}
+.sr{position:absolute;left:-9999px}
+@media (prefers-reduced-motion: reduce){*{transition:none!important}}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div>
+      <p class="eyebrow">Diseño de Modelos Digitales Sostenibles · Unidad V</p>
+      <h1>Calculadora de Triple Impacto</h1>
+      <p class="hint">Cargá los datos de tu proyecto y obtené las métricas con la fórmula a la vista, listas para el tablero del Trabajo Final.</p>
+    </div>
+    <div class="layers" aria-hidden="true"><span style="background:#1b5e20"></span><span style="background:#66bb6a"></span><span style="background:#c5e1a5"></span>&nbsp;económica · ambiental · social</div>
+  </header>
+
+  <div class="banner" id="exampleBanner" hidden>
+    <span><strong>Estás viendo un ejemplo ficticio</strong> (una app de viandas con reparto en moto). Reemplazá los datos por los de tu proyecto.</span>
+    <span class="row"><button class="btn small" id="btnBlank">Empezar en blanco</button></span>
+  </div>
+
+  <nav class="steps" role="tablist" aria-label="Pasos">
+    <button role="tab" data-tab="t1" aria-selected="true"><span class="n">1</span>Proyecto</button>
+    <button role="tab" data-tab="t2" aria-selected="false"><span class="n">2</span>Económicas</button>
+    <button role="tab" data-tab="t3" aria-selected="false"><span class="n">3</span>Ambientales</button>
+    <button role="tab" data-tab="t4" aria-selected="false"><span class="n">4</span>Sociales</button>
+    <button role="tab" data-tab="t5" aria-selected="false"><span class="n">5</span>Tablero y balance</button>
+    <button role="tab" data-tab="t6" aria-selected="false"><span class="n">IA</span>Prompt para elegir métricas</button>
+    <button role="tab" data-tab="t7" aria-selected="false"><span class="n">i</span>Factores y fuentes</button>
+  </nav>
+
+  <!-- 1 PROYECTO -->
+  <section id="t1" class="tab grid">
+    <div class="panel">
+      <h2>1. Datos del proyecto</h2>
+      <div class="fields">
+        <label class="f">Nombre del proyecto<input type="text" id="p_nombre" data-k="p.nombre"></label>
+        <label class="f">Grupo<input type="text" id="p_grupo" data-k="p.grupo"></label>
+        <label class="f">Tipología de modelo digital
+          <select id="p_tipo" data-k="p.tipo"><option value="">Elegí…</option><option>Freemium</option><option>Suscripción</option><option>Afiliación</option><option>Dropshipping</option></select></label>
+      </div>
+      <fieldset>
+        <legend>Unidad funcional (bloque A1)</legend>
+        <p class="hint">Es una unidad del servicio que presta su modelo: un pedido, una transacción, un envío, una búsqueda, un usuario activo por mes. Todas las métricas "por unidad" se calculan con este número.</p>
+        <div class="fields">
+          <label class="f">¿Cuál es su unidad funcional?<small>En singular, por ejemplo "pedido entregado"</small><input type="text" id="p_unidad" data-k="p.unidad"></label>
+          <label class="f">¿Cuántas prestan por mes?<small>Estimación para el primer año</small><input type="number" min="0" step="any" id="p_vol" data-k="p.vol"></label>
+        </div>
+        <p id="p_valorFuncional" class="hint"></p>
+      </fieldset>
+    </div>
+    <div class="panel">
+      <h2>Cómo usar la calculadora</h2>
+      <ol style="margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px">
+        <li><strong>Elijan qué medir</strong> (pestaña <em>Prompt para elegir métricas</em>): pueden usar una IA para pensar las métricas candidatas, sin que invente datos.</li>
+        <li><strong>Carguen sus supuestos</strong> en los pasos 2, 3 y 4. Cada número es una estimación de ustedes: anoten de dónde sale.</li>
+        <li><strong>Revisen los resultados</strong>: cada métrica muestra la fórmula, el cálculo y una alerta si algo no cierra.</li>
+        <li><strong>Armen el tablero</strong> (paso 5): elijan 2 métricas por dimensión, completen supuestos, meta y Tema de Impacto B, y copien las tablas al Word.</li>
+      </ol>
+      <p class="alert">La calculadora hace las cuentas. Interpretar los resultados, decidir y defenderlos en la oral es tarea del grupo.</p>
+      <p class="hint">Los datos se guardan solo en este navegador. Si cambian de computadora, vuelvan a cargarlos o copien las tablas antes.</p>
+      <div class="row" id="resetArea"><button class="btn danger small" id="btnReset">Borrar todos los datos</button></div>
+    </div>
+  </section>
+
+  <!-- 2 ECONÓMICAS -->
+  <section id="t2" class="tab grid" hidden>
+    <div class="panel">
+      <h2>2. Métricas económicas</h2>
+      <p class="hint">Valores en pesos y por mes. Usen los mismos datos de su Estructura de Costos y sus Fuentes de Ingresos (TPI N.° 2).</p>
+      <div class="fields">
+        <label class="f">Precio por unidad<small>Lo que cobran por cada <span class="uName">unidad</span></small><input type="number" min="0" step="any" id="e_precio" data-k="e.precio"></label>
+        <label class="f">Costo variable por unidad<small>Insumos, envío, comisiones de pago…</small><input type="number" min="0" step="any" id="e_cvu" data-k="e.cvu"></label>
+        <label class="f">Costos fijos por mes<small>Sueldos, hosting, alquiler, software…</small><input type="number" min="0" step="any" id="e_cf" data-k="e.cf"></label>
+      </div>
+      <fieldset>
+        <legend><label class="toggle"><input type="checkbox" id="e_rec" data-k="e.rec"> Tenemos clientes recurrentes (suscripción o compras repetidas)</label></legend>
+        <div class="fields" data-show="e.rec">
+          <label class="f">Churn mensual (%)<small>% de clientes que se van cada mes</small><input type="number" min="0" max="100" step="any" id="e_churn" data-k="e.churn"></label>
+          <label class="f">Unidades por cliente por mes<small>Cuántas veces compra o paga cada cliente al mes</small><input type="number" min="0" step="any" id="e_upc" data-k="e.upc"></label>
+          <label class="f">Costo de adquisición por cliente (CPA)<small>Publicidad, promociones, comisiones de captación</small><input type="number" min="0" step="any" id="e_cpa" data-k="e.cpa"></label>
+        </div>
+      </fieldset>
+      <fieldset>
+        <legend><label class="toggle"><input type="checkbox" id="e_plat" data-k="e.plat"> Somos una plataforma que intermedia (cobramos comisión)</label></legend>
+        <div class="fields" data-show="e.plat">
+          <label class="f">Volumen bruto transaccionado por mes<small>Todo lo que se vende a través de la plataforma</small><input type="number" min="0" step="any" id="e_gmv" data-k="e.gmv"></label>
+          <label class="f">Ingresos de la plataforma por mes<small>Comisiones, cuotas y publicidad</small><input type="number" min="0" step="any" id="e_ingPlat" data-k="e.ingPlat"></label>
+        </div>
+      </fieldset>
+      <fieldset>
+        <legend><label class="toggle"><input type="checkbox" id="e_free" data-k="e.free"> Usamos freemium</label></legend>
+        <div class="fields" data-show="e.free">
+          <label class="f">Usuarios totales por mes<input type="number" min="0" step="any" id="e_usu" data-k="e.usu"></label>
+          <label class="f">Costo mensual por usuario gratuito<input type="number" min="0" step="any" id="e_cug" data-k="e.cug"></label>
+          <label class="f">Conversión a premium (%)<input type="number" min="0" max="100" step="any" id="e_conv" data-k="e.conv"></label>
+          <label class="f">Precio premium por mes<input type="number" min="0" step="any" id="e_pprem" data-k="e.pprem"></label>
+        </div>
+      </fieldset>
+    </div>
+    <div class="panel"><h2>Resultados económicos</h2><div id="r_eco" class="results" style="display:flex;flex-direction:column;gap:12px"></div></div>
+  </section>
+
+  <!-- 3 AMBIENTALES -->
+  <section id="t3" class="tab grid" hidden>
+    <div class="panel">
+      <h2>3. Métricas ambientales</h2>
+      <p class="hint">Sumen las actividades que generan emisiones en un mes típico. Si saben los <strong>litros</strong> de combustible, usen el factor oficial argentino. Si solo saben los <strong>kilómetros</strong>, usen el factor por km. Revisen la pestaña <em>Factores y fuentes</em>.</p>
+      <div id="actList" style="display:flex;flex-direction:column;gap:10px"></div>
+      <div class="row"><button class="btn ghost small" id="btnAddAct">+ Agregar actividad</button></div>
+      <fieldset>
+        <legend>Energía renovable (opcional)</legend>
+        <div class="fields">
+          <label class="f">kWh renovables por mes<input type="number" min="0" step="any" id="a_kwhRen" data-k="a.kwhRen"></label>
+          <label class="f">kWh totales por mes<input type="number" min="0" step="any" id="a_kwhTot" data-k="a.kwhTot"></label>
+        </div>
+      </fieldset>
+      <fieldset>
+        <legend>Impacto evitado (opcional, bloque A6)</legend>
+        <p class="hint">Solo si su modelo evita emisiones frente a la alternativa sin él (por ejemplo, comida que no se tira). Necesitan un factor con fuente.</p>
+        <div class="fields">
+          <label class="f">¿Qué se evita?<small>Por ejemplo "comida salvada"</small><input type="text" id="a_evDesc" data-k="a.evDesc"></label>
+          <label class="f">Cantidad por mes<input type="number" min="0" step="any" id="a_evCant" data-k="a.evCant"></label>
+          <label class="f">Factor (kg CO₂e por unidad)
+            <select id="a_evFact" data-k="a.evFact"><option value="">Elegí…</option><option value="tgtg">Comida salvada: 2,7 kg CO₂e (Too Good To Go)</option><option value="custom">Otro factor con fuente</option></select></label>
+          <label class="f" data-show-eq="a.evFact=custom">Valor del factor<input type="number" min="0" step="any" id="a_evCustom" data-k="a.evCustom"></label>
+          <label class="f" data-show-eq="a.evFact=custom">Fuente del factor<input type="text" id="a_evFuente" data-k="a.evFuente"></label>
+        </div>
+      </fieldset>
+    </div>
+    <div class="panel"><h2>Resultados ambientales</h2><div id="r_amb" style="display:flex;flex-direction:column;gap:12px"></div></div>
+  </section>
+
+  <!-- 4 SOCIALES -->
+  <section id="t4" class="tab grid" hidden>
+    <div class="panel">
+      <h2>4. Métricas sociales</h2>
+      <p class="hint">Elijan una plantilla por grupo de interés y carguen el numerador y el denominador. Las plantillas son las de la Clase 9. Recuerden que contar personas capacitadas mide una actividad, no un impacto.</p>
+      <div id="socList" style="display:flex;flex-direction:column;gap:10px"></div>
+      <div class="row"><button class="btn ghost small" id="btnAddSoc">+ Agregar métrica social</button></div>
+    </div>
+    <div class="panel"><h2>Resultados sociales</h2><div id="r_soc" style="display:flex;flex-direction:column;gap:12px"></div></div>
+  </section>
+
+  <!-- 5 TABLERO -->
+  <section id="t5" class="tab" hidden style="display:flex;flex-direction:column;gap:18px">
+    <div class="panel">
+      <h2>5. Tablero de métricas del Trabajo Final</h2>
+      <p class="hint">Marquen 2 métricas económicas, 2 ambientales y 2 sociales. Para cada una completen supuestos y fuente, meta a un año y Tema de Impacto B.</p>
+      <div id="checks" style="display:flex;flex-direction:column;gap:4px"></div>
+      <div id="selList" style="display:grid;align-items:start;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:12px"></div>
+    </div>
+    <div class="panel">
+      <h2>Balance por dimensión</h2>
+      <p class="hint">La calculadora no decide si el beneficio supera al impacto: eso lo fundamentan ustedes con sus métricas.</p>
+      <div id="balForm" style="display:flex;flex-direction:column;gap:12px"></div>
+    </div>
+    <div class="panel">
+      <div class="row" style="justify-content:space-between"><h2>Tablas para copiar al Word</h2>
+        <span class="row"><button class="btn small" id="btnCopy">Copiar las tablas</button><span id="copyMsg" class="hint" role="status"></span></span></div>
+      <p class="hint">Si el botón no funciona en su navegador, seleccionen las tablas con el mouse, copien (Ctrl+C) y peguen en Word.</p>
+      <div id="out" style="display:flex;flex-direction:column;gap:14px"></div>
+    </div>
+  </section>
+
+  <!-- 6 PROMPT -->
+  <section id="t6" class="tab grid" hidden>
+    <div class="panel">
+      <div class="row" style="justify-content:space-between"><h2>Prompt para elegir métricas con IA</h2>
+        <span class="row"><button class="btn small" id="btnCopyPrompt">Copiar el prompt</button><span id="copyPromptMsg" class="hint" role="status"></span></span></div>
+      <p class="hint">Peguen este texto en ChatGPT, Gemini o Claude, y completen al final los datos de su Canvas. La IA los ayuda a <strong>elegir</strong> métricas y a saber qué datos juntar; las cuentas se hacen en esta calculadora.</p>
+      <pre class="prompt" id="promptText"></pre>
+    </div>
+    <div class="panel">
+      <h2>Reglas para usar IA en este trabajo</h2>
+      <ul style="margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px">
+        <li>Pueden usar IA para elegir métricas y para pensar qué datos necesitan. Declaren en el trabajo para qué la usaron.</li>
+        <li>Ninguna cifra que dé la IA es un dato: es un supuesto a validar. Si la usan, anoten de dónde sale o búsquenla en una fuente.</li>
+        <li>La interpretación, el balance y las decisiones de diseño los escriben ustedes: es lo que van a defender en la oral.</li>
+        <li>Si la IA calcula algo distinto que la calculadora, revisen los datos cargados: la calculadora usa las fórmulas de la cátedra.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 7 FACTORES -->
+  <section id="t7" class="tab" hidden style="display:flex;flex-direction:column;gap:18px">
+    <div class="panel">
+      <h2>Factores de emisión de referencia</h2>
+      <p class="hint">Un factor de emisión convierte una actividad (kWh, litros, km) en kg de CO₂ equivalente. Usen primero los factores oficiales de Argentina; los factores por km son una referencia internacional para cuando no saben los litros consumidos.</p>
+      <div class="tablewrap"><table id="factTable"></table></div>
+      <p class="hint">Cómo se calcularon los factores argentinos: el documento oficial publica CO₂, CH₄ y N₂O por separado. El CO₂e suma CO₂ + CH₄ × 28 + N₂O × 265, con los potenciales de calentamiento del IPCC AR5 que indica el mismo documento (Tabla 23).</p>
+    </div>
+  </section>
+
+  <footer>Calculadora didáctica para la cátedra Diseño de Modelos Digitales Sostenibles · Universidad de Congreso · Prof.: Lic. Abog. María Florencia Melia. Fórmulas de la Clase 8 (métricas económicas) y la Clase 9 (métricas de sostenibilidad).</footer>
+</div>
+
+<script>
+(function(){
+"use strict";
+// ---------- Factores ----------
+const FACT = {
+  elec:   {label:"Electricidad de la red (Argentina)", unit:"kWh", f:0.286, src:"SNIGEI-AR, Factores de Emisión GEI para Huella de Carbono (2025), Tabla 5, datos 2022: 0,283 kg CO₂/kWh + CH₄ y N₂O", origen:"Argentina (oficial)"},
+  nafta:  {label:"Nafta súper", unit:"litros", f:2.293, src:"SNIGEI-AR (2025), Tabla 2: 2,238 kg CO₂/L + CH₄ y N₂O", origen:"Argentina (oficial)"},
+  gasoil: {label:"Gasoil común", unit:"litros", f:2.569, src:"SNIGEI-AR (2025), Tabla 2: 2,529 kg CO₂/L + CH₄ y N₂O", origen:"Argentina (oficial)"},
+  gnc:    {label:"GNC", unit:"m³", f:2.069, src:"SNIGEI-AR (2025), Tabla 3: 1,951 kg CO₂/m³ + CH₄ y N₂O", origen:"Argentina (oficial)"},
+  glp:    {label:"GLP (garrafa, autoelevador)", unit:"litros", f:1.672, src:"SNIGEI-AR (2025), Tabla 4: 1,668 kg CO₂/L + CH₄ y N₂O", origen:"Argentina (oficial)"},
+  km_moto:{label:"Moto (promedio)", unit:"km", f:0.11367, src:"DESNZ, UK GHG Conversion Factors 2025", origen:"Reino Unido (referencia)"},
+  km_auto_n:{label:"Auto nafta (promedio)", unit:"km", f:0.16272, src:"DESNZ, UK GHG Conversion Factors 2025", origen:"Reino Unido (referencia)"},
+  km_auto_d:{label:"Auto diésel (promedio)", unit:"km", f:0.17304, src:"DESNZ, UK GHG Conversion Factors 2025", origen:"Reino Unido (referencia)"},
+  km_util_d:{label:"Utilitario / camioneta diésel (promedio)", unit:"km", f:0.25561, src:"DESNZ, UK GHG Conversion Factors 2025", origen:"Reino Unido (referencia)"},
+  km_util_n:{label:"Utilitario / camioneta nafta (promedio)", unit:"km", f:0.21335, src:"DESNZ, UK GHG Conversion Factors 2025", origen:"Reino Unido (referencia)"},
+  km_camion:{label:"Camión (promedio, con carga)", unit:"km", f:0.89121, src:"DESNZ, UK GHG Conversion Factors 2025", origen:"Reino Unido (referencia)"},
+  custom: {label:"Otro (factor propio con fuente)", unit:"unidades", f:null, src:"", origen:"A cargo del grupo"}
+};
+const EVIT = { tgtg:{f:2.7, src:"Too Good To Go, metodología Mérieux NutriSciences | Blonk (2024): 2,7 kg CO₂e por comida (≈ 1 kg de alimentos)"} };
+const TEMAS = ["Gobernanza de las Partes Interesadas y Propósito","Trabajo Justo","Justicia, Equidad, Diversidad e Inclusión","Derechos Humanos","Acción Climática","Circularidad y Gestión Ambiental","Asuntos Gubernamentales y Acción Colectiva"];
+const SOC_T = {
+  ingreso:{nombre:"Ingreso de quienes trabajan a través de la plataforma", num:"Ingreso medio por hora ($)", den:"Salario de referencia por hora ($)", k:1, unidad:"veces el salario de referencia", grupo:"Repartidores, vendedores, prestadores", ib:"beneficio", tema:"Trabajo Justo"},
+  dependencia:{nombre:"Dependencia económica de los socios", num:"Socios para quienes la plataforma es su ingreso principal", den:"Socios totales", k:100, unidad:"% de socios", grupo:"Vendedores, comercios", ib:"impacto", tema:"Gobernanza de las Partes Interesadas y Propósito"},
+  inclusion:{nombre:"Inclusión", num:"Usuarios que acceden al servicio por primera vez", den:"Usuarios totales", k:100, unidad:"% de usuarios", grupo:"Usuarios finales", ib:"beneficio", tema:"Justicia, Equidad, Diversidad e Inclusión"},
+  capacitacion:{nombre:"Capacitación que se aplica", num:"Personas que aplican lo aprendido", den:"Personas capacitadas", k:100, unidad:"% de capacitados", grupo:"Comunidad, usuarios", ib:"beneficio", tema:"Asuntos Gubernamentales y Acción Colectiva"},
+  cadena:{nombre:"Condiciones de trabajo en la cadena", num:"Trabajadores alcanzados por una mejora verificable", den:"Trabajadores totales de la cadena", k:100, unidad:"% de trabajadores", grupo:"Proveedores", ib:"beneficio", tema:"Trabajo Justo"},
+  diversidad:{nombre:"Diversidad en la toma de decisiones", num:"Mujeres en puestos de conducción", den:"Personas en puestos de conducción", k:100, unidad:"% de mujeres", grupo:"Empleados, gobernanza", ib:"beneficio", tema:"Justicia, Equidad, Diversidad e Inclusión"},
+  proteccion:{nombre:"Protección del usuario", num:"Reclamos o fraudes en el período", den:"Transacciones en el período", k:10000, unidad:"cada 10.000 transacciones", grupo:"Usuarios finales", ib:"impacto", tema:"Derechos Humanos"},
+  custom:{nombre:"", num:"Numerador", den:"Denominador", k:100, unidad:"%", grupo:"", ib:"beneficio", tema:""}
+};
+
+// ---------- Estado ----------
+const KEY = "calc-triple-impacto-v1";
+function blank(){ return {example:false, p:{nombre:"",grupo:"",tipo:"",unidad:"",vol:""},
+  e:{precio:"",cvu:"",cf:"",rec:false,churn:"",upc:"1",cpa:"",plat:false,gmv:"",ingPlat:"",free:false,usu:"",cug:"",conv:"",pprem:""},
+  a:{acts:[{id:uid(),tipo:"elec",cant:"",desc:"Electricidad de la oficina (factura)",fc:"",fu:""}],kwhRen:"",kwhTot:"",evDesc:"",evCant:"",evFact:"",evCustom:"",evFuente:""},
+  s:[], tab:{}, bal:{eco:{neg:"",ben:"",fund:""},amb:{neg:"",ben:"",fund:""},soc:{neg:"",ben:"",fund:""}} }; }
+function example(){ const st = blank(); st.example = true;
+  st.p = {nombre:"Vianda Verde (ejemplo ficticio)",grupo:"Ejemplo",tipo:"Suscripción",unidad:"vianda entregada",vol:"1200"};
+  st.e = {precio:"6500",cvu:"4300",cf:"1800000",rec:true,churn:"8",upc:"12",cpa:"30000",plat:false,gmv:"",ingPlat:"",free:false,usu:"",cug:"",conv:"",pprem:""};
+  st.a.acts = [
+    {id:uid(),tipo:"km_moto",cant:"3000",desc:"Reparto en moto (supuesto: 2,5 km por vianda)",fc:"",fu:""},
+    {id:uid(),tipo:"elec",cant:"900",desc:"Cocina y oficina (factura de luz)",fc:"",fu:""},
+    {id:uid(),tipo:"glp",cant:"120",desc:"Gas envasado para cocinar",fc:"",fu:""}];
+  st.a.kwhRen = "0"; st.a.kwhTot = "900";
+  st.s = [
+    {id:uid(),t:"ingreso",nombre:"",num:"3800",den:"2900",fuente:"Supuesto: pago por hora a repartidores vs. salario de referencia (completar fuente)",grupo:""},
+    {id:uid(),t:"proteccion",nombre:"",num:"6",den:"1200",fuente:"Supuesto: reclamos por pedidos con problemas",grupo:""}];
+  return st; }
+let S;
+function uid(){ return Math.random().toString(36).slice(2,9); }
+function load(){ try{ const raw = localStorage.getItem(KEY); if(raw){ return Object.assign(blank(), JSON.parse(raw)); } }catch(e){} return example(); }
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){} }
+
+// ---------- Utilidades ----------
+const $ = (s,el=document)=>el.querySelector(s);
+const $$ = (s,el=document)=>Array.from(el.querySelectorAll(s));
+function num(v){ if(v===""||v===null||v===undefined) return NaN; const n = Number(String(v).replace(",", ".")); return isFinite(n)?n:NaN; }
+function fmt(n,d=2){ if(!isFinite(n)) return "—"; return n.toLocaleString("es-AR",{maximumFractionDigits:d,minimumFractionDigits:0}); }
+function money(n){ if(!isFinite(n)) return "—"; return "$ " + n.toLocaleString("es-AR",{maximumFractionDigits:0}); }
+function esc(s){ return String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
+function getK(path){ return path.split(".").reduce((o,k)=>o?.[k], S); }
+function setK(path,val){ const ks = path.split("."); let o = S; for(let i=0;i<ks.length-1;i++) o = o[ks[i]]; o[ks.at(-1)] = val; }
+function uName(){ return S.p.unidad?.trim() || "unidad"; }
+
+// ---------- Cálculo de métricas ----------
+function compute(){
+  const M = []; const u = uName();
+  const precio=num(S.e.precio), cvu=num(S.e.cvu), cf=num(S.e.cf), vol=num(S.p.vol);
+  const mc = precio - cvu;
+  // Económicas
+  M.push(mk("e_mc","eco","Margen de contribución unitario","MC = precio − costo variable unitario",
+    `MC = ${money(precio)} − ${money(cvu)} = ${money(mc)}`, mc, money(mc), `$ por ${u}`, "De intensidad (por unidad)",
+    !isFinite(mc)?null: mc<=0?["bad","Cada venta pierde plata: el modelo no cubre ni sus costos variables."]:null, mc>0?"beneficio":"impacto"));
+  const mcp = mc/precio*100;
+  M.push(mk("e_mcp","eco","Margen de contribución (%)","MC % = MC ÷ precio × 100",
+    `MC % = ${money(mc)} ÷ ${money(precio)} × 100 = ${fmt(mcp,1)} %`, mcp, fmt(mcp,1)+" %", "% del precio", "De intensidad (relativa)", null, mcp>0?"beneficio":"impacto"));
+  const pe = cf/mc;
+  M.push(mk("e_pe","eco","Punto de equilibrio","PE = costos fijos ÷ MC",
+    `PE = ${money(cf)} ÷ ${money(mc)} = ${fmt(pe,1)} → se redondea hacia arriba: ${fmt(Math.ceil(pe),0)} por mes (${u})`, mc>0?pe:NaN, mc>0?fmt(Math.ceil(pe),0):"—", `unidades por mes (${u})`, "Absoluta",
+    mc<=0?["bad","Sin margen de contribución positivo no hay punto de equilibrio."]: (isFinite(vol)&&isFinite(pe)&&vol<pe)?["warn",`Con ${fmt(vol,0)} unidades por mes no llegan al punto de equilibrio (les faltan ${fmt(Math.ceil(pe-vol),0)}).`]:null, "beneficio"));
+  const res = vol*mc - cf;
+  M.push(mk("e_res","eco","Resultado mensual estimado","Resultado = unidades por mes × MC − costos fijos",
+    `Resultado = ${fmt(vol,0)} × ${money(mc)} − ${money(cf)} = ${money(res)}`, res, money(res), "$ por mes", "Absoluta",
+    isFinite(res)&&res<0?["bad","Con estos supuestos el modelo pierde plata cada mes."]:null, res>=0?"beneficio":"impacto"));
+  if(S.e.rec){
+    const churn=num(S.e.churn)/100, upc=num(S.e.upc), cpa=num(S.e.cpa);
+    const vida = 1/churn; const mcCliente = mc*upc; const ltv = mcCliente*vida; const ratio = ltv/cpa;
+    M.push(mk("e_vida","eco","Vida media del cliente","Vida media = 1 ÷ churn mensual",
+      `Vida media = 1 ÷ ${fmt(churn,4)} = ${fmt(vida,1)} meses`, vida, fmt(vida,1)+" meses", "meses", "Absoluta", null, "beneficio"));
+    M.push(mk("e_ltv","eco","Valor de vida del cliente (LTV)","LTV = MC por cliente por mes × vida media",
+      `MC por cliente = ${money(mc)} × ${fmt(upc,2)} = ${money(mcCliente)} por mes\nLTV = ${money(mcCliente)} × ${fmt(vida,1)} = ${money(ltv)}`, ltv, money(ltv), "$ por cliente", "De intensidad (por cliente)", null, "beneficio"));
+    M.push(mk("e_ltvcpa","eco","LTV / CPA","LTV ÷ costo de adquisición por cliente",
+      `LTV / CPA = ${money(ltv)} ÷ ${money(cpa)} = ${fmt(ratio,2)}`, ratio, fmt(ratio,2)+" veces", "veces", "De intensidad (relativa)",
+      isFinite(ratio)&&ratio<1?["bad","Cada cliente devuelve menos de lo que cuesta captarlo."]: isFinite(ratio)&&ratio<3?["warn","Es positivo, pero con poco margen: si sube el CPA o el churn, deja de cerrar."]:null, ratio>=1?"beneficio":"impacto"));
+  }
+  if(S.e.plat){
+    const gmv=num(S.e.gmv), ing=num(S.e.ingPlat); const tr = ing/gmv*100;
+    M.push(mk("e_take","eco","Take rate","Take rate = ingresos de la plataforma ÷ volumen bruto transaccionado × 100",
+      `Take rate = ${money(ing)} ÷ ${money(gmv)} × 100 = ${fmt(tr,1)} %`, tr, fmt(tr,1)+" %", "% del volumen", "De intensidad (relativa)", null, "beneficio"));
+  }
+  if(S.e.free){
+    const usu=num(S.e.usu), cug=num(S.e.cug), conv=num(S.e.conv)/100, pp=num(S.e.pprem);
+    const prem = usu*conv, gratis = usu - prem; const exc = prem*pp - gratis*cug;
+    M.push(mk("e_free","eco","Excedente freemium mensual","Excedente = usuarios premium × precio premium − usuarios gratuitos × costo del gratuito",
+      `Premium = ${fmt(usu,0)} × ${fmt(conv*100,1)} % = ${fmt(prem,0)} · Gratuitos = ${fmt(gratis,0)}\nExcedente = ${fmt(prem,0)} × ${money(pp)} − ${fmt(gratis,0)} × ${money(cug)} = ${money(exc)}`,
+      exc, money(exc), "$ por mes", "Absoluta", isFinite(exc)&&exc<0?["bad","Los usuarios premium no alcanzan a pagar el costo de los gratuitos."]:null, exc>=0?"beneficio":"impacto"));
+  }
+  // Ambientales
+  const rows = S.a.acts.map(a=>{ const F = FACT[a.tipo]||FACT.custom; const f = a.tipo==="custom"?num(a.fc):F.f; const c = num(a.cant); return {a, F, f, c, kg: c*f}; });
+  const valid = rows.filter(r=>isFinite(r.kg));
+  const kgMes = valid.reduce((s,r)=>s+r.kg,0);
+  const tAnio = kgMes*12/1000;
+  const desarrolloAbs = valid.length? valid.map(r=>`${r.a.desc||r.F.label}: ${fmt(r.c,2)} ${r.a.tipo==="custom"?(r.a.fu||"unid."):r.F.unit} × ${fmt(r.f,5)} = ${fmt(r.kg,1)} kg`).join("\n")+`\nTotal mensual = ${fmt(kgMes,1)} kg CO₂e → × 12 ÷ 1.000 = ${fmt(tAnio,2)} t CO₂e por año` : "Carguen al menos una actividad.";
+  M.push(mk("a_abs","amb","Emisiones totales","Emisiones = Σ (cantidad de cada actividad × factor de emisión) × 12 meses",
+    desarrolloAbs, valid.length?tAnio:NaN, valid.length?fmt(tAnio,2)+" t CO₂e":"—", "t CO₂e por año", "Absoluta", null, "impacto"));
+  const inten = kgMes/vol;
+  M.push(mk("a_int","amb",`Emisiones por ${u}`,`Intensidad = emisiones mensuales (kg CO₂e) ÷ unidades por mes (${u})`,
+    `Intensidad = ${fmt(kgMes,1)} kg ÷ ${fmt(vol,0)} = ${fmt(inten,3)} kg CO₂e por ${u}`, valid.length?inten:NaN, valid.length&&isFinite(inten)?fmt(inten,3)+" kg CO₂e":"—", `kg CO₂e por ${u}`, "De intensidad (por unidad funcional)",
+    !isFinite(vol)||vol<=0?["warn","Falta el volumen mensual en el paso 1."]:null, "impacto"));
+  const kr=num(S.a.kwhRen), kt=num(S.a.kwhTot);
+  if(isFinite(kt)&&kt>0){ const pr = kr/kt*100;
+    M.push(mk("a_ren","amb","Energía renovable","Renovable % = kWh renovables ÷ kWh totales × 100",
+      `Renovable = ${fmt(kr,0)} ÷ ${fmt(kt,0)} × 100 = ${fmt(pr,1)} %`, pr, fmt(pr,1)+" %", "% de la electricidad", "De intensidad (relativa)", null, "beneficio")); }
+  let evF = S.a.evFact==="tgtg"?EVIT.tgtg.f: S.a.evFact==="custom"?num(S.a.evCustom):NaN;
+  const evC = num(S.a.evCant);
+  if(S.a.evFact && isFinite(evC)){ const evT = evC*evF*12/1000;
+    M.push(mk("a_evit","amb",`Emisiones evitadas (${S.a.evDesc||"impacto evitado"})`,"Evitado = cantidad por mes × factor × 12 meses",
+      `Evitado = ${fmt(evC,0)} × ${fmt(evF,3)} kg × 12 ÷ 1.000 = ${fmt(evT,2)} t CO₂e por año`, evT, fmt(evT,2)+" t CO₂e", "t CO₂e evitadas por año", "Absoluta (estimada)",
+      S.a.evFact==="custom"&&!S.a.evFuente?["warn","Indiquen la fuente del factor: sin fuente, el dato no es verificable."]:null, "beneficio"));
+    if(valid.length&&tAnio>0){ const rb = evT/tAnio;
+      M.push(mk("a_bal","amb","Evitado / propio","Relación = emisiones evitadas ÷ emisiones propias",
+        `Relación = ${fmt(evT,2)} ÷ ${fmt(tAnio,2)} = ${fmt(rb,2)}`, rb, fmt(rb,2)+" veces", "veces", "De intensidad (relativa)",
+        rb<1?["warn","El modelo emite más de lo que evita."]:null, "beneficio")); }
+  }
+  // Sociales
+  S.s.forEach(sm=>{ const T = SOC_T[sm.t]||SOC_T.custom; const n=num(sm.num), d=num(sm.den); const k = sm.t==="custom"?num(sm.k||100):T.k; const v = n/d*k;
+    const nombre = sm.t==="custom"?(sm.nombre||"Métrica social propia"):T.nombre; const unidad = sm.t==="custom"?(sm.unidad||""):T.unidad;
+    const kTxt = k===1?"": ` × ${fmt(k,0)}`;
+    let al = null;
+    if(sm.t==="capacitacion") al = ["warn","Esta métrica mide si lo aprendido se aplica. El número de personas capacitadas solo, sin esto, es una métrica de actividad."];
+    if(sm.t==="ingreso" && isFinite(v) && v<1) al = ["bad","Quienes trabajan a través de la plataforma ganan menos que el salario de referencia."];
+    M.push(mk("s_"+sm.id,"soc",nombre,`${T.num||"Numerador"} ÷ ${T.den||"Denominador"}${kTxt}`,
+      `${fmt(n,2)} ÷ ${fmt(d,2)}${kTxt} = ${fmt(v,2)} ${unidad}`, v, isFinite(v)?fmt(v,2)+" "+unidad:"—", unidad, k===1?"De intensidad (relativa)":"De intensidad (relativa)", al, T.ib||"beneficio", sm.fuente, T.tema));
+  });
+  return M;
+}
+function mk(id,dim,nombre,formula,desarrollo,valor,valTxt,unidad,tipo,alerta,ib,fuente,tema){ return {id,dim,nombre,formula,desarrollo,valor,valTxt,unidad,tipo,alerta,ib,fuente:fuente||"",tema:tema||""}; }
+
+// ---------- Render ----------
+function metricCard(m){
+  const cls = !isFinite(m.valor)?"off": m.alerta?(m.alerta[0]==="bad"?"bad":"warn"):"";
+  const ibChip = m.ib==="impacto"?'<span class="chip neg">impacto</span>':'<span class="chip pos">beneficio</span>';
+  return `<div class="metric ${cls}"><div class="top"><h3>${esc(m.nombre)}</h3><span class="val">${esc(m.valTxt)}</span></div>
+    <div class="chips"><span class="chip">${esc(m.unidad)}</span><span class="chip">${esc(m.tipo)}</span>${ibChip}</div>
+    <div class="formula">${esc(m.formula)}\n${esc(m.desarrollo)}</div>
+    ${m.alerta?`<p class="alert ${m.alerta[0]==="bad"?"bad":""}">${esc(m.alerta[1])}</p>`:""}
+    ${!isFinite(m.valor)?'<p class="hint">Faltan datos para calcular esta métrica.</p>':""}</div>`;
+}
+function renderResults(){
+  const M = compute();
+  $("#r_eco").innerHTML = M.filter(m=>m.dim==="eco").map(metricCard).join("");
+  // ambiental: tabla de actividades (fuente mayor)
+  const rows = S.a.acts.map(a=>{ const F=FACT[a.tipo]||FACT.custom; const f=a.tipo==="custom"?num(a.fc):F.f; return {d:a.desc||F.label, kg:num(a.cant)*f}; }).filter(r=>isFinite(r.kg));
+  const tot = rows.reduce((s,r)=>s+r.kg,0);
+  let hot = "";
+  if(rows.length && tot>0){ const sorted=[...rows].sort((a,b)=>b.kg-a.kg);
+    hot = `<div class="panel" style="padding:12px"><h3>¿Dónde está su mayor impacto? (bloque A5)</h3><div class="tablewrap"><table><thead><tr><th>Actividad</th><th>kg CO₂e por mes</th><th>% del total</th></tr></thead><tbody>${sorted.map(r=>`<tr><td>${esc(r.d)}</td><td class="num">${fmt(r.kg,1)}</td><td class="num">${fmt(r.kg/tot*100,1)} %</td></tr>`).join("")}</tbody></table></div><p class="hint">La actividad de arriba es su mayor fuente de emisiones: ahí conviene buscar la decisión de diseño.</p></div>`; }
+  $("#r_amb").innerHTML = hot + M.filter(m=>m.dim==="amb").map(metricCard).join("");
+  const soc = M.filter(m=>m.dim==="soc");
+  $("#r_soc").innerHTML = soc.length? soc.map(metricCard).join("") : '<p class="hint">Agreguen al menos dos métricas sociales.</p>';
+  $$(".uName").forEach(e=>e.textContent=uName());
+  const v=num(S.p.vol); $("#p_valorFuncional").textContent = isFinite(v)? `Valor funcional: ${fmt(v*12,0)} por año (${uName()}).`:"";
+  $("#exampleBanner").hidden = !S.example;
+  renderTablero(M);
+}
+function renderActs(){
+  const opts = Object.entries(FACT).map(([k,F])=>`<option value="${k}">${esc(F.label)}${F.f?` · ${fmt(F.f,3)} kg/${F.unit}`:""}</option>`).join("");
+  $("#actList").innerHTML = S.a.acts.map(a=>{ const F=FACT[a.tipo]||FACT.custom;
+    return `<div class="act" data-id="${a.id}">
+      <label class="f">Actividad<select data-ak="tipo">${opts}</select></label>
+      <label class="f">Cantidad por mes (${esc(a.tipo==="custom"?(a.fu||"unidades"):F.unit)})<input type="number" min="0" step="any" data-ak="cant" value="${esc(a.cant)}"></label>
+      <button class="btn danger small" data-del="${a.id}" aria-label="Quitar actividad">Quitar</button>
+      <label class="f wide">Descripción y supuesto<input type="text" data-ak="desc" value="${esc(a.desc)}" placeholder="Por ejemplo: reparto en moto, 2,5 km por pedido"></label>
+      ${a.tipo==="custom"?`<label class="f">Factor (kg CO₂e por unidad)<input type="number" min="0" step="any" data-ak="fc" value="${esc(a.fc)}"></label>
+      <label class="f">Unidad y fuente del factor<input type="text" data-ak="fu" value="${esc(a.fu)}" placeholder="Por ejemplo: kg de cartón · fuente"></label>`:""}
+    </div>`; }).join("");
+  $$("#actList .act").forEach(el=>{ const a=S.a.acts.find(x=>x.id===el.dataset.id); el.querySelector('[data-ak="tipo"]').value=a.tipo; });
+}
+function renderSoc(){
+  const opts = Object.entries(SOC_T).map(([k,T])=>`<option value="${k}">${esc(k==="custom"?"Métrica propia":T.nombre)}</option>`).join("");
+  $("#socList").innerHTML = S.s.length? S.s.map(sm=>{ const T=SOC_T[sm.t]||SOC_T.custom;
+    return `<div class="selcard" data-id="${sm.id}">
+      <div class="row" style="justify-content:space-between"><label class="f" style="flex:1">Plantilla<select data-sk="t">${opts}</select></label><button class="btn danger small" data-sdel="${sm.id}">Quitar</button></div>
+      ${sm.t==="custom"?`<div class="fields"><label class="f">Nombre de la métrica<input type="text" data-sk="nombre" value="${esc(sm.nombre)}"></label>
+        <label class="f">Multiplicar por<select data-sk="k"><option value="1">1 (razón)</option><option value="100">100 (%)</option><option value="1000">1.000</option><option value="10000">10.000</option></select></label>
+        <label class="f">Unidad del resultado<input type="text" data-sk="unidad" value="${esc(sm.unidad)}"></label></div>`:`<p class="hint">Grupo de interés: ${esc(T.grupo)}</p>`}
+      <div class="fields"><label class="f">${esc(T.num)}<input type="number" min="0" step="any" data-sk="num" value="${esc(sm.num)}"></label>
+      <label class="f">${esc(T.den)}<input type="number" min="0" step="any" data-sk="den" value="${esc(sm.den)}"></label></div>
+      <label class="f">Supuestos y fuente de los datos<input type="text" data-sk="fuente" value="${esc(sm.fuente)}"></label>
+    </div>`; }).join("") : '<p class="hint">Todavía no hay métricas sociales.</p>';
+  $$("#socList .selcard").forEach(el=>{ const sm=S.s.find(x=>x.id===el.dataset.id); el.querySelector('[data-sk="t"]').value=sm.t; const k=el.querySelector('[data-sk="k"]'); if(k) k.value=String(sm.k||100); });
+}
+function renderTablero(M){
+  M = M || compute();
+  const avail = M.filter(m=>isFinite(m.valor));
+  // limpiar selecciones de métricas que ya no existen
+  Object.keys(S.tab).forEach(id=>{ if(!M.find(m=>m.id===id)) delete S.tab[id]; });
+  const sel = Object.keys(S.tab).filter(id=>S.tab[id].on);
+  const selM = M.filter(m=>sel.includes(m.id));
+  const cnt = d=>selM.filter(m=>m.dim===d).length;
+  const ib = m=>S.tab[m.id]?.ib||m.ib;
+  const chk = [
+    [cnt("eco")===2,`2 métricas económicas (llevan ${cnt("eco")})`],
+    [cnt("amb")===2,`2 métricas ambientales (llevan ${cnt("amb")})`],
+    [cnt("soc")===2,`2 métricas sociales (llevan ${cnt("soc")})`],
+    [selM.some(m=>m.dim==="amb"&&/intensidad/i.test(m.tipo)&&m.id==="a_int"),"Al menos una métrica ambiental de intensidad por unidad funcional"],
+    [selM.some(m=>m.dim==="amb"&&ib(m)==="impacto"),"Al menos una métrica ambiental de impacto negativo"],
+    [selM.some(m=>m.dim==="soc"&&ib(m)==="impacto"),"Al menos una métrica social de impacto negativo"],
+    [selM.length>0&&selM.every(m=>(S.tab[m.id].sup ?? m.fuente ?? "").trim().length>0),"Todas las métricas elegidas tienen supuestos y fuente"]
+  ];
+  $("#checks").innerHTML = chk.map(([ok,t])=>`<div class="check ${ok?"ok":"no"}"><span class="ic">${ok?"✓":"✗"}</span><span>${esc(t)}</span></div>`).join("");
+  const dimName = {eco:"Económica",amb:"Ambiental",soc:"Social"};
+  const temaOpts = '<option value="">—</option>'+TEMAS.map(t=>`<option>${esc(t)}</option>`).join("");
+  const host = $("#selList");
+  const focused = document.activeElement && host.contains(document.activeElement) ? document.activeElement.id : null;
+  host.innerHTML = avail.length? avail.map(m=>{ const t=S.tab[m.id]||{}; const on=!!t.on;
+    return `<div class="selcard ${on?"on":""}" data-mid="${m.id}">
+      <label class="check"><input type="checkbox" id="tab_on_${m.id}" data-tk="on" ${on?"checked":""}><span><strong>${esc(dimName[m.dim])}:</strong> ${esc(m.nombre)} · <strong>${esc(m.valTxt)}</strong></span></label>
+      ${on?`<label class="f">Supuestos y fuente<textarea id="tab_sup_${m.id}" data-tk="sup">${esc(t.sup ?? m.fuente ?? "")}</textarea></label>
+      <div class="fields"><label class="f">Meta a un año<input type="text" id="tab_meta_${m.id}" data-tk="meta" value="${esc(t.meta||"")}" placeholder="Por ejemplo: bajar a 0,2 kg por pedido"></label>
+      <label class="f">¿Impacto o beneficio?<select id="tab_ib_${m.id}" data-tk="ib"><option value="impacto">Impacto (negativo)</option><option value="beneficio">Beneficio (positivo)</option></select></label>
+      ${m.dim!=="eco"?`<label class="f">Tema de Impacto B<select id="tab_tema_${m.id}" data-tk="tema">${temaOpts}</select></label>`:""}</div>`:""}
+    </div>`; }).join("") : '<p class="hint">Primero calculen métricas en los pasos 2, 3 y 4.</p>';
+  $$("#selList .selcard").forEach(el=>{ const id=el.dataset.mid; const m=M.find(x=>x.id===id); const t=S.tab[id]||{};
+    const ibs=el.querySelector('[data-tk="ib"]'); if(ibs) ibs.value = t.ib||m.ib;
+    const ts=el.querySelector('[data-tk="tema"]'); if(ts) ts.value = t.tema ?? (m.dim==="amb"?"Acción Climática":m.tema||""); });
+  if(focused){ const el=document.getElementById(focused); if(el){ el.focus(); if(el.setSelectionRange && el.value!==undefined && el.type!=="number"){ const L=el.value.length; try{el.setSelectionRange(L,L);}catch(e){} } } }
+  renderBalance(M, selM);
+  renderOut(M, selM);
+}
+function renderBalance(M, selM){
+  const host=$("#balForm"); if(host.dataset.built) return; host.dataset.built="1";
+  host.innerHTML = [["eco","Económica"],["amb","Ambiental"],["soc","Social"]].map(([k,n])=>`<fieldset><legend>${n}</legend><div class="fields">
+    <label class="f">Principal impacto negativo (y métrica)<input type="text" id="bal_${k}_neg" data-bk="${k}.neg" value="${esc(S.bal[k].neg)}"></label>
+    <label class="f">Principal beneficio (y métrica)<input type="text" id="bal_${k}_ben" data-bk="${k}.ben" value="${esc(S.bal[k].ben)}"></label></div>
+    <label class="f">¿El beneficio supera al impacto? Fundamenten<textarea id="bal_${k}_fund" data-bk="${k}.fund">${esc(S.bal[k].fund)}</textarea></label></fieldset>`).join("");
+}
+function renderOut(M, selM){
+  M = M || compute(); selM = selM || M.filter(m=>S.tab[m.id]?.on);
+  const dimName = {eco:"Económica",amb:"Ambiental",soc:"Social"}; const order={eco:0,amb:1,soc:2};
+  const rows = [...selM].sort((a,b)=>order[a.dim]-order[b.dim]).map(m=>{ const t=S.tab[m.id]||{}; const ib=t.ib||m.ib; const tema = m.dim==="eco"?"—":(t.tema ?? (m.dim==="amb"?"Acción Climática":m.tema||""));
+    return `<tr><td>${dimName[m.dim]}</td><td>${esc(m.nombre)}</td><td>${esc(m.formula)}</td><td>${esc(m.unidad)}</td><td class="num">${esc(m.valTxt)}</td><td>${esc(t.meta||"")}</td><td>${esc(t.sup ?? m.fuente ?? "")}</td><td>${esc(m.tipo)}; ${ib==="impacto"?"impacto":"beneficio"}</td><td>${esc(tema||"—")}</td></tr>`; }).join("");
+  const des = [...selM].sort((a,b)=>order[a.dim]-order[b.dim]).map(m=>`<tr><td>${esc(m.nombre)}</td><td style="white-space:pre-wrap">${esc(m.desarrollo)}</td></tr>`).join("");
+  const bal = [["eco","Económica"],["amb","Ambiental"],["soc","Social"]].map(([k,n])=>`<tr><td>${n}</td><td>${esc(S.bal[k].neg)}</td><td>${esc(S.bal[k].ben)}</td><td>${esc(S.bal[k].fund)}</td></tr>`).join("");
+  $("#out").innerHTML = `<div id="copyZone">
+    <p><strong>Proyecto:</strong> ${esc(S.p.nombre||"—")} · <strong>Unidad funcional:</strong> ${esc(S.p.unidad||"—")} · <strong>Valor funcional:</strong> ${isFinite(num(S.p.vol))?fmt(num(S.p.vol)*12,0)+" por año":"—"}</p>
+    <h3 style="margin:10px 0 6px">Tablero de métricas</h3>
+    <div class="tablewrap"><table><thead><tr><th>Dimensión</th><th>Métrica</th><th>Fórmula</th><th>Unidad</th><th>Valor estimado</th><th>Meta a un año</th><th>Supuestos y fuente</th><th>Tipo</th><th>Tema de Impacto B</th></tr></thead><tbody>${rows||'<tr><td colspan="9">Elijan las métricas arriba.</td></tr>'}</tbody></table></div>
+    <h3 style="margin:14px 0 6px">Desarrollo de los cálculos</h3>
+    <div class="tablewrap"><table><thead><tr><th>Métrica</th><th>Cálculo</th></tr></thead><tbody>${des||'<tr><td colspan="2">—</td></tr>'}</tbody></table></div>
+    <h3 style="margin:14px 0 6px">Balance por dimensión</h3>
+    <div class="tablewrap"><table><thead><tr><th>Dimensión</th><th>Principal impacto negativo (y métrica)</th><th>Principal beneficio (y métrica)</th><th>¿El beneficio supera al impacto? Fundamenten</th></tr></thead><tbody>${bal}</tbody></table></div>
+    <p class="hint" style="margin-top:8px">Factores de emisión: SNIGEI-AR (2025) y DESNZ (2025), según cada actividad. Cálculos hechos con la Calculadora de Triple Impacto de la cátedra.</p></div>`;
+}
+function renderFactTable(){
+  $("#factTable").innerHTML = `<thead><tr><th>Actividad</th><th>Factor</th><th>Por</th><th>Origen</th><th>Fuente</th></tr></thead><tbody>` +
+    Object.values(FACT).filter(F=>F.f).map(F=>`<tr><td>${esc(F.label)}</td><td class="num">${fmt(F.f,3)} kg CO₂e</td><td>${esc(F.unit)}</td><td>${esc(F.origen)}</td><td>${esc(F.src)}</td></tr>`).join("") +
+    `<tr><td>Comida salvada del desperdicio (impacto evitado)</td><td class="num">2,7 kg CO₂e</td><td>comida (≈ 1 kg)</td><td>Caso Too Good To Go</td><td>${esc(EVIT.tgtg.src)}</td></tr></tbody>`;
+}
+
+// ---------- Prompt ----------
+const PROMPT = `Actuá como tutor de la materia "Diseño de Modelos Digitales Sostenibles" (1.° año, Licenciatura en Administración de Negocios Digitales). Mi grupo tiene que elegir las métricas de sostenibilidad de su proyecto para el Trabajo Final Integrador.
+
+TU TAREA: ayudarnos a ELEGIR métricas y a saber qué datos juntar. No calcules los resultados ni redactes partes del trabajo: las cuentas las hacemos con la calculadora de la cátedra y la interpretación la escribimos nosotros.
+
+REGLAS:
+1. No inventes cifras. Si necesitás un dato que no te dimos, preguntanos. Si sugerís un valor de referencia, marcalo como "SUPUESTO A VALIDAR" y decinos dónde podríamos buscarlo.
+2. Proponé 3 métricas candidatas por dimensión (económica, ambiental y social). Para cada una indicá: nombre, fórmula, unidad, si es absoluta o de intensidad, si mide un impacto (negativo) o un beneficio (positivo), qué bloque del Canvas mide (económico; A1 a A6; S1 a S6) y, para las ambientales y sociales, con cuál de los 7 Temas de Impacto de los Estándares B Lab V2 se relaciona (Gobernanza de las Partes Interesadas y Propósito; Trabajo Justo; Justicia, Equidad, Diversidad e Inclusión; Derechos Humanos; Acción Climática; Circularidad y Gestión Ambiental; Asuntos Gubernamentales y Acción Colectiva).
+3. Usá estas fórmulas cuando correspondan:
+   - Económicas: margen de contribución = precio − costo variable unitario; punto de equilibrio = costos fijos ÷ margen de contribución; vida media = 1 ÷ churn; LTV = margen por cliente por mes × vida media; LTV/CPA; take rate = ingresos de la plataforma ÷ volumen transaccionado.
+   - Ambientales: emisiones = cantidad de la actividad (kWh, litros, km) × factor de emisión; intensidad = emisiones ÷ unidad funcional; impacto evitado = cantidad × factor con fuente.
+   - Sociales: razones del tipo numerador ÷ denominador (por ejemplo, % de socios para quienes la plataforma es su ingreso principal, ingreso por hora ÷ salario de referencia, reclamos cada 10.000 transacciones).
+4. Entre las candidatas tiene que haber: al menos una métrica ambiental de intensidad por unidad funcional, al menos una ambiental de impacto negativo y al menos una social de impacto negativo.
+5. Señalá si alguna métrica es "vanidosa" (un número grande que no ayuda a decidir, como usuarios registrados) y proponé la versión "accionable".
+6. Al final, armá una lista de los datos que tenemos que juntar para cargar en la calculadora, con una pregunta concreta por cada dato (por ejemplo: "¿Cuántos km recorre un repartidor por pedido?").
+7. No escribas el balance del triple impacto ni conclusiones. Si querés ayudar, hacenos 3 preguntas que nos sirvan para escribirlo nosotros.
+8. Respondé en español, de forma clara y breve, con tablas.
+
+DATOS DE NUESTRO PROYECTO (completar):
+- Nombre del proyecto y tipología (freemium, suscripción, afiliación o dropshipping):
+- Unidad funcional (qué es "una unidad" de nuestro servicio) y cuántas estimamos por mes:
+- Capa económica (9 bloques):
+- Capa ambiental (A1 a A6):
+- Capa social (S1 a S6):
+- Datos que ya tenemos (precios, costos, consumos, km, etc.):`;
+
+// ---------- Eventos ----------
+function bindStatic(){
+  $$("[data-k]").forEach(el=>{
+    const v = getK(el.dataset.k);
+    if(el.type==="checkbox") el.checked = !!v; else el.value = v ?? "";
+    el.addEventListener(el.type==="checkbox"||el.tagName==="SELECT"?"change":"input", ()=>{
+      setK(el.dataset.k, el.type==="checkbox"?el.checked:el.value); toggles(); save(); renderResults();
+    });
+  });
+  toggles();
+}
+function toggles(){
+  $$("[data-show]").forEach(el=>{ el.hidden = !getK(el.dataset.show); });
+  $$("[data-show-eq]").forEach(el=>{ const [k,v]=el.dataset.showEq.split("="); el.hidden = getK(k)!==v; });
+}
+function bindDynamic(){
+  $("#actList").addEventListener("input", e=>{ const el=e.target; const box=el.closest(".act"); if(!box||!el.dataset.ak) return; const a=S.a.acts.find(x=>x.id===box.dataset.id);
+    a[el.dataset.ak]=el.value; save(); if(el.dataset.ak==="tipo"){ renderActs(); } renderResults(); });
+  $("#actList").addEventListener("change", e=>{ const el=e.target; if(el.dataset.ak==="tipo"){ const a=S.a.acts.find(x=>x.id===el.closest(".act").dataset.id); a.tipo=el.value; save(); renderActs(); renderResults(); }});
+  $("#actList").addEventListener("click", e=>{ const id=e.target.dataset.del; if(!id) return; S.a.acts=S.a.acts.filter(a=>a.id!==id); save(); renderActs(); renderResults(); });
+  $("#btnAddAct").addEventListener("click", ()=>{ S.a.acts.push({id:uid(),tipo:"elec",cant:"",desc:"",fc:"",fu:""}); save(); renderActs(); renderResults(); });
+  $("#socList").addEventListener("input", e=>{ const el=e.target; const box=el.closest(".selcard"); if(!box||!el.dataset.sk||el.tagName==="SELECT") return; const sm=S.s.find(x=>x.id===box.dataset.id); sm[el.dataset.sk]=el.value; save(); renderResults(); });
+  $("#socList").addEventListener("change", e=>{ const el=e.target; if(el.tagName!=="SELECT") return; const sm=S.s.find(x=>x.id===el.closest(".selcard").dataset.id); sm[el.dataset.sk]=el.value; save(); if(el.dataset.sk==="t") renderSoc(); renderResults(); });
+  $("#socList").addEventListener("click", e=>{ const id=e.target.dataset.sdel; if(!id) return; S.s=S.s.filter(x=>x.id!==id); save(); renderSoc(); renderResults(); });
+  $("#btnAddSoc").addEventListener("click", ()=>{ S.s.push({id:uid(),t:"dependencia",nombre:"",num:"",den:"",fuente:"",k:"100",unidad:""}); save(); renderSoc(); renderResults(); });
+  $("#selList").addEventListener("change", e=>{ const el=e.target; const box=el.closest(".selcard"); if(!box) return; const id=box.dataset.mid; S.tab[id]=S.tab[id]||{};
+    if(el.dataset.tk==="on"){ S.tab[id].on=el.checked; save(); renderTablero(); return; }
+    if(el.tagName==="SELECT"){ S.tab[id][el.dataset.tk]=el.value; save(); renderTablero(); } });
+  $("#selList").addEventListener("input", e=>{ const el=e.target; const box=el.closest(".selcard"); if(!box||el.tagName==="SELECT"||el.type==="checkbox") return; const id=box.dataset.mid; S.tab[id]=S.tab[id]||{}; S.tab[id][el.dataset.tk]=el.value; save(); renderOut(); refreshChecks(); });
+  $("#balForm").addEventListener("input", e=>{ const el=e.target; if(!el.dataset.bk) return; const [k,f]=el.dataset.bk.split("."); S.bal[k][f]=el.value; save(); renderOut(); });
+  $$("nav.steps button").forEach(b=>b.addEventListener("click", ()=>showTab(b.dataset.tab)));
+  $("#btnBlank").addEventListener("click", ()=>{ S=blank(); save(); location.hash=""; rebuild(); });
+  $("#btnCopy").addEventListener("click", ()=>copyRich($("#copyZone"), $("#copyMsg")));
+  $("#btnCopyPrompt").addEventListener("click", ()=>copyText(PROMPT, $("#copyPromptMsg"), $("#promptText")));
+}
+function bindResetOnly(){ const b=$("#btnReset"); if(!b) return; b.onclick = ()=>{ const area=$("#resetArea"); area.innerHTML = '<div class="confirm"><span>¿Borrar todos los datos de este navegador?</span><button class="btn danger small" id="yesReset">Sí, borrar</button><button class="btn ghost small" id="noReset">Cancelar</button></div>';
+    $("#yesReset").onclick = ()=>{ S=blank(); save(); rebuild(); };
+    $("#noReset").onclick = ()=>{ area.innerHTML='<button class="btn danger small" id="btnReset">Borrar todos los datos</button>'; bindResetOnly(); }; }; }
+function refreshChecks(){ const M=compute(); const sel=M.filter(m=>S.tab[m.id]?.on); const ib=m=>S.tab[m.id]?.ib||m.ib; const cnt=d=>sel.filter(m=>m.dim===d).length;
+  const chk=[[cnt("eco")===2,`2 métricas económicas (llevan ${cnt("eco")})`],[cnt("amb")===2,`2 métricas ambientales (llevan ${cnt("amb")})`],[cnt("soc")===2,`2 métricas sociales (llevan ${cnt("soc")})`],
+    [sel.some(m=>m.id==="a_int"),"Al menos una métrica ambiental de intensidad por unidad funcional"],[sel.some(m=>m.dim==="amb"&&ib(m)==="impacto"),"Al menos una métrica ambiental de impacto negativo"],
+    [sel.some(m=>m.dim==="soc"&&ib(m)==="impacto"),"Al menos una métrica social de impacto negativo"],[sel.length>0&&sel.every(m=>(S.tab[m.id].sup ?? m.fuente ?? "").trim().length>0),"Todas las métricas elegidas tienen supuestos y fuente"]];
+  $("#checks").innerHTML = chk.map(([ok,t])=>`<div class="check ${ok?"ok":"no"}"><span class="ic">${ok?"✓":"✗"}</span><span>${esc(t)}</span></div>`).join(""); }
+async function copyRich(node, msg){
+  const html = node.innerHTML; const text = node.innerText;
+  try{ if(window.ClipboardItem && navigator.clipboard?.write){ await navigator.clipboard.write([new ClipboardItem({"text/html":new Blob([html],{type:"text/html"}),"text/plain":new Blob([text],{type:"text/plain"})})]); msg.textContent="Copiado. Pegalo en Word."; return; } throw 0; }
+  catch(e){ try{ const r=document.createRange(); r.selectNodeContents(node); const s=getSelection(); s.removeAllRanges(); s.addRange(r); msg.textContent="Tablas seleccionadas: presioná Ctrl+C (o Cmd+C) y pegá en Word."; }catch(_){ msg.textContent="Seleccioná las tablas con el mouse y copiá."; } }
+}
+async function copyText(t, msg, node){
+  try{ await navigator.clipboard.writeText(t); msg.textContent="Copiado."; }
+  catch(e){ try{ const r=document.createRange(); r.selectNodeContents(node); const s=getSelection(); s.removeAllRanges(); s.addRange(r); msg.textContent="Texto seleccionado: presioná Ctrl+C."; }catch(_){ msg.textContent="Seleccioná el texto y copiá."; } }
+}
+function showTab(id){ $$(".tab").forEach(t=>t.hidden = t.id!==id); $$("nav.steps button").forEach(b=>b.setAttribute("aria-selected", b.dataset.tab===id?"true":"false"));
+  if(id==="t5"){ const host=$("#balForm"); host.dataset.built=""; renderTablero(); } }
+function rebuild(){ $$("[data-k]").forEach(el=>{ const v=getK(el.dataset.k); if(el.type==="checkbox") el.checked=!!v; else el.value=v??""; }); toggles(); $("#balForm").dataset.built=""; renderActs(); renderSoc(); renderResults(); bindResetOnly(); }
+
+// ---------- Inicio ----------
+S = load();
+$("#promptText").textContent = PROMPT;
+renderFactTable(); bindStatic(); renderActs(); renderSoc(); bindDynamic();
+bindResetOnly();
+renderResults();
+})();
+</script>
+
+</body>
+</html>
